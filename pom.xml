@@ -21,7 +21,7 @@
     <artifactId>log-relayer</artifactId>
     <version>0.1-SNAPSHOT</version>
     <name>Log Relayer</name>
-    <description>A tool for tailing log files and relaying the results to the log viewer via a websocket endpoint in real time.</description>
+    <description>A web application that tails log files and relays the results in real time to the log viewer via the websocket endpoint.</description>
     <contributors>
         <contributor>
             <name>Juho Jeong</name>
