@@ -1,23 +1,20 @@
-Aspectow Enterprise
+Log Relayer
 ===================
 
-Aspectow is an all-in-one web application server based on Aspectran.  
-Aspectow Enterprise fully supports the servlet specification and is suitable for building enterprise web applications.
-JBoss's [Undertow](http://undertow.io) or Eclipse [Jetty](https://www.eclipse.org/jetty/) can be used as a web server.
-[Apache Jasper](https://mvnrepository.com/artifact/org.mortbay.jasper/apache-jsp) is used to support JSP and it is the same JSP engine that Apache Tomcat uses.
+A web application that tails log files and relays the results in real time to the log viewer via the websocket endpoint.
 
 ## Running Aspectow
 
 - Clone this repository
 
   ```sh
-  $ git clone https://github.com/aspectran/aspectow-enterprise.git
+  $ git clone https://github.com/aspectran/log-relayer.git
   ```
 
 - Build with Maven
 
   ```sh
-  $ cd aspectow-enterprise
+  $ cd log-relayer
   $ mvn clean package
   ```
 
@@ -28,4 +25,4 @@ JBoss's [Undertow](http://undertow.io) or Eclipse [Jetty](https://www.eclipse.or
   $ ./shell.sh
   ```
 
-- Access in your browser at http://localhost:8080
+- Access in your browser at http://localhost:8090
