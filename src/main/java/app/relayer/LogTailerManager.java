@@ -30,11 +30,20 @@ public class LogTailerManager {
 
     private final LogtailEndpoint endpoint;
 
-    public LogTailerManager(LogtailEndpoint endpoint, LogTailer[] tailers) {
+    public LogTailerManager(LogtailEndpoint endpoint) {
         this.endpoint = endpoint;
         this.tailers = new HashMap<>();
         endpoint.setLogTailerManager(this);
+    }
+
+    public LogTailerManager(LogtailEndpoint endpoint, LogTailer[] tailers) {
+        this(endpoint);
         addLogTailer(tailers);
+    }
+
+    public LogTailerManager(LogtailEndpoint endpoint, LogTailerConfig tailerConfig) {
+        this(endpoint);
+//        addLogTailer(tailers);
     }
 
     public void addLogTailer(LogTailer... tailers) {
