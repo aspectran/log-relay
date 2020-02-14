@@ -1,46 +1,3 @@
-.stats {
-    height: 220px;
-}
-.stats dt {
-    float: left;
-    clear: left;
-    padding: 0;
-    margin: 0;
-    height: 40px;
-    font-size: 1.1em;
-}
-.stats dd {
-    text-align: right;
-    font-weight: bold;
-    font-size: 1.1em;
-    padding: 0;
-    margin: 0;
-    height: 40px;
-}
-
-.users-wrap {
-    height: 220px;
-    overflow-y: auto;
-    list-style-type: none;
-}
-.users {
-    margin-left: 0;
-}
-.users li {
-    list-style-type: none;
-}
-.users .status {
-    background-color: #13CF13;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 10px;
-}
-.users .status.logged-out {
-    background-color: #ccc;
-}
-
 .log-container {
     background-color: #222;
 }
@@ -131,7 +88,7 @@
     margin: 0;
     padding: 10px;
     overflow: auto;
-    height: 400px;
+    height: 500px;
     color: #f1f1f1;
     background: transparent;
     border: none;

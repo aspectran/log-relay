@@ -12,15 +12,15 @@ import java.util.List;
  */
 public class LogTailerConfig extends AbstractParameters {
 
-    private static final ParameterKey tailers;
+    private static final ParameterKey tailer;
 
     private static final ParameterKey[] parameterKeys;
 
     static {
-        tailers = new ParameterKey("tailers", LogTailerItem.class);
+        tailer = new ParameterKey("tailer", LogTailerInfo.class, true, true);
 
         parameterKeys = new ParameterKey[] {
-                tailers
+                tailer
         };
     }
 
@@ -33,12 +33,12 @@ public class LogTailerConfig extends AbstractParameters {
         readFrom("tailers: [\n" + StringUtils.trimWhitespace(text) + "\n]");
     }
 
-    public List<LogTailerItem> getLogTailerItems() {
-        return getParametersList(tailers);
+    public List<LogTailerInfo> getLogTailerInfoList() {
+        return getParametersList(tailer);
     }
 
-    public LogTailerConfig addLogTailerItem(LogTailerItem logTailerItem) {
-        putValue(tailers, logTailerItem);
+    public LogTailerConfig addLogTailerInfo(LogTailerInfo logTailerInfo) {
+        putValue(tailer, logTailerInfo);
         return this;
     }
 

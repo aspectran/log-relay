@@ -7,7 +7,7 @@ import com.aspectran.core.util.apon.ValueType;
 /**
  * <p>Created: 2020/02/12</p>
  */
-public class LogTailerItem extends AbstractParameters {
+public class LogTailerInfo extends AbstractParameters {
 
     private static final ParameterKey name;
     private static final ParameterKey logFile;
@@ -27,7 +27,7 @@ public class LogTailerItem extends AbstractParameters {
         };
     }
 
-    public LogTailerItem() {
+    public LogTailerInfo() {
         super(parameterKeys);
     }
 

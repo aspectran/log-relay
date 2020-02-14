@@ -1,87 +1,4 @@
-function SessionStats(endpoint, refreshInterval) {
-    this.endpoint = endpoint;
-    this.refreshInterval = refreshInterval;
-    this.socket = null;
-    this.heartbeatTimer = null;
-
-    this.openSocket = function() {
-        if (this.socket) {
-            this.socket.close();
-        }
-        let url = new URL(this.endpoint, location.href);
-        url.protocol = url.protocol.replace('https:', 'wss:');
-        url.protocol = url.protocol.replace('http:', 'ws:');
-        this.socket = new WebSocket(url.href);
-        let self = this;
-        this.socket.onopen = function (event) {
-            self.socket.send("JOIN:" + self.refreshInterval);
-            self.heartbeatPing();
-        };
-        this.socket.onmessage = function (event) {
-            if (typeof event.data === "string") {
-                if (event.data === "--heartbeat-pong--") {
-                    self.heartbeatPing();
-                    return;
-                }
-                let stats = JSON.parse(event.data);
-                self.printStats(stats);
-            }
-        };
-        this.socket.onclose = function (event) {
-            self.closeSocket();
-        };
-        this.socket.onerror = function (event) {
-            console.error("WebSocket error observed:", event);
-            setTimeout(function () {
-                self.openSocket();
-            }, 60000);
-        };
-    };
-
-    this.closeSocket = function() {
-        if (this.socket) {
-            this.socket.close();
-            this.socket = null;
-        }
-    };
-
-    this.heartbeatPing = function() {
-        if (this.heartbeatTimer) {
-            clearTimeout(this.heartbeatTimer);
-        }
-        let self = this;
-        this.heartbeatTimer = setTimeout(function () {
-            if (self.socket) {
-                self.socket.send("--heartbeat-ping--");
-                self.heartbeatTimer = null;
-                self.heartbeatPing();
-            }
-        }, 57000);
-    };
-
-    this.printStats = function(stats) {
-        $(".activeSessionCount").text(stats.activeSessionCount);
-        $(".highestSessionCount").text(stats.highestSessionCount);
-        $(".createdSessionCount").text(stats.createdSessionCount);
-        $(".expiredSessionCount").text(stats.expiredSessionCount);
-        $(".rejectedSessionCount").text(stats.rejectedSessionCount);
-        if (stats.currentUsers) {
-            $(".users").empty();
-            stats.currentUsers.forEach(function(username) {
-                let status = $("<div/>").addClass("status");
-                if (username.indexOf("0:") === 0) {
-                    status.addClass("logged-out")
-                }
-                username = username.substr(2);
-                let name = $("<span/>").addClass("name").text(username);
-                let li = $("<li/>").append(status).append(name);
-                $(".users").append(li);
-            });
-        }
-    };
-}
-
-function LogTailer(endpoint, tailers) {
+function LogtailViewer(endpoint, tailers) {
     this.endpoint = endpoint;
     this.tailers = tailers;
     this.socket = null;
@@ -205,10 +122,10 @@ function LogTailer(endpoint, tailers) {
         }
     };
 
-    this.pattern1 = /^Session ([\w\.]+) complete, active requests=(\d+)/i;
-    this.pattern2 = /^Session ([\w\.]+) deleted in session data store/i;
-    this.pattern3 = /^Session ([\w\.]+) accessed, stopping timer, active requests=(\d+)/i;
-    this.pattern4 = /^Creating new session id=([\w\.]+)/i;
+    const pattern1 = /^Session ([\w\.]+) complete, active requests=(\d+)/i;
+    const pattern2 = /^Session ([\w\.]+) deleted in session data store/i;
+    const pattern3 = /^Session ([\w\.]+) accessed, stopping timer, active requests=(\d+)/i;
+    const pattern4 = /^Creating new session id=([\w\.]+)/i;
 
     this.launchMissile = function(line) {
         let idx = line.indexOf("] ");
@@ -218,7 +135,7 @@ function LogTailer(endpoint, tailers) {
 
         let sessionId = "";
         let requests = 0;
-        if (this.pattern1.test(line) || this.pattern2.test(line)) {
+        if (pattern1.test(line) || pattern2.test(line)) {
             sessionId = RegExp.$1;
             requests = RegExp.$2||0;
             if (requests > 3) {
@@ -239,7 +156,7 @@ function LogTailer(endpoint, tailers) {
             }
             return;
         }
-        if (this.pattern3.test(line) || this.pattern4.test(line)) {
+        if (pattern3.test(line) || pattern4.test(line)) {
             sessionId = RegExp.$1;
             requests = RegExp.$2||1;
             if (requests > 3) {
@@ -247,13 +164,14 @@ function LogTailer(endpoint, tailers) {
             }
         }
         if (requests > 0) {
-            let mis = $("<div/>").attr("sessionId", sessionId + requests);
-            mis.css("top", this.generateRandom(3, 90 - (requests * 2)) + "%");
-            mis.appendTo($(".missile-route")).addClass("missile mis-" + requests);
+            let min = 3;
+            let max = 90 - (requests * 2);
+            let top = (Math.floor(Math.random() * (max - min + 1)) + min) + '%';
+            $("<div/>")
+                .attr("sessionId", sessionId + requests)
+                .css("top", top)
+                .addClass("missile mis-" + requests)
+                .appendTo($(".missile-route"));
         }
-    };
-
-    this.generateRandom = function(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 }

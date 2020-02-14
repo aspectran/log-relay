@@ -1,0 +1,14 @@
+tailer: {
+    name: app-log
+    type: aspectran-app-log
+    file: c:\Users\Gulendol\Projects\workspace\log-relayer\app\logs\app.log
+    sampleInterval: 1000
+    pattern: {
+        start: [
+
+        ]
+        end: [
+
+        ]
+    }
+}

@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <meta name="google" content="notranslate">
-    <title>${empty page.title ? "Aspectran Demo Site" : page.title}</title>
-    <meta name="description" content="${empty page.description ? "Welcome to Aspectran Demo" : page.description}" />
+    <title>${empty page.title ? "Log Relayer" : page.title}</title>
+    <meta name="description" content="${empty page.description ? "Welcome to Log Relayer" : page.description}" />
     <link rel="stylesheet" type="text/css" href="https://aspectran.com/assets/css/aspectran.css" />
     <link href="https://fonts.googleapis.com/css?family=Raleway:500,500i,700" rel="stylesheet">
     <script src="https://aspectran.com/assets/js/modernizr-custom.js"></script>
@@ -71,24 +71,7 @@
             <div class="top-bar-left">
                 <ul class="dropdown menu" data-dropdown-menu>
                     <li>
-                        <a href="/examples/hello-world">Examples</a>
-                        <ul class="submenu menu vertical" data-submenu>
-                            <li><a href="/examples/hello-world">Hello World</a></li>
-                            <li><a href="/examples/gs-rest-service/">RESTful Web Service</a></li>
-                            <li><a href="/examples/file-upload/">File Upload</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="/terminal/">Terminal</a>
-                    </li>
-                    <li>
-                        <a href="/skylark/">Skylark</a>
-                    </li>
-                    <li>
-                        <a href="/chat/">Chat</a>
-                    </li>
-                    <li>
-                        <a href="/apm/">APM</a>
+                        <a>Log Relayer</a>
                     </li>
                 </ul>
             </div>
@@ -145,13 +128,13 @@
                 <nav role="navigation" aria-label="You are here:">
                     <ul class="breadcrumbs" itemprop="breadcrumb">
                         <li><a href="https://aspectran.com/en/">Aspectran</a></li>
-                        <li><a href="/">Demo</a></li>
+                        <li><a href="/">Log Relayer</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </div>
-    <div class="grid-container ${page.style}">
+    <div class="grid-container t15 ${page.style}">
     <c:if test="${not empty page.include}">
         <jsp:include page="/WEB-INF/jsp/${page.include}.jsp"/>
     </c:if>
