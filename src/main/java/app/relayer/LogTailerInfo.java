@@ -12,6 +12,7 @@ public class LogTailerInfo extends AbstractParameters {
     private static final ParameterKey name;
     private static final ParameterKey logFile;
     private static final ParameterKey sampleInterval;
+    private static final ParameterKey visualizer;
 
     private static final ParameterKey[] parameterKeys;
 
@@ -19,11 +20,13 @@ public class LogTailerInfo extends AbstractParameters {
         name = new ParameterKey("name", ValueType.STRING);
         logFile = new ParameterKey("logFile", ValueType.STRING);
         sampleInterval = new ParameterKey("sampleInterval", ValueType.LONG);
+        visualizer = new ParameterKey("visualizer", ValueType.STRING);
 
         parameterKeys = new ParameterKey[] {
                 name,
                 logFile,
-                sampleInterval
+                sampleInterval,
+                visualizer
         };
     }
 

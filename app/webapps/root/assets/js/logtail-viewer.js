@@ -69,10 +69,7 @@ function LogtailViewer(endpoint, tailers) {
     };
 
     this.printMessage = function(tailer, text) {
-        let self = this;
-        setTimeout(function () {
-            self.launchMissile(text);
-        }, 1);
+        this.visualize(tailer, text);
         let line = $("<p/>").text(text);
         let logtail = $("#" + tailer);
         logtail.append(line);
@@ -122,11 +119,18 @@ function LogtailViewer(endpoint, tailers) {
         }
     };
 
+    this.visualize = function(tailer, text) {
+        let self = this;
+        setTimeout(function () {
+            self.launchMissile(text);
+        }, 1);
+    };
+
+    // A function for visualizing Aspectran app logs
     const pattern1 = /^Session ([\w\.]+) complete, active requests=(\d+)/i;
     const pattern2 = /^Session ([\w\.]+) deleted in session data store/i;
     const pattern3 = /^Session ([\w\.]+) accessed, stopping timer, active requests=(\d+)/i;
     const pattern4 = /^Creating new session id=([\w\.]+)/i;
-
     this.launchMissile = function(line) {
         let idx = line.indexOf("] ");
         if (idx !== -1) {
