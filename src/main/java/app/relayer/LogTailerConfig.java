@@ -4,6 +4,7 @@ import com.aspectran.core.util.StringUtils;
 import com.aspectran.core.util.apon.AbstractParameters;
 import com.aspectran.core.util.apon.ParameterKey;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,7 +31,12 @@ public class LogTailerConfig extends AbstractParameters {
 
     public LogTailerConfig(String text) throws IOException {
         this();
-        readFrom("tailers: [\n" + StringUtils.trimWhitespace(text) + "\n]");
+        readFrom(text);
+    }
+
+    public LogTailerConfig(File file) throws IOException {
+        this();
+        readFrom(file);
     }
 
     public List<LogTailerInfo> getLogTailerInfoList() {

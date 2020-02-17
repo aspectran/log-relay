@@ -18,12 +18,14 @@ package app.relayer;
 import com.aspectran.core.component.bean.annotation.AvoidAdvice;
 import com.aspectran.core.component.bean.annotation.Component;
 import com.aspectran.core.util.StringUtils;
+import com.aspectran.core.util.json.JsonWriter;
 import com.aspectran.core.util.logging.Log;
 import com.aspectran.core.util.logging.LogFactory;
 import com.aspectran.web.socket.jsr356.ActivityContextAwareEndpoint;
 import com.aspectran.web.socket.jsr356.AspectranConfigurator;
 
 import javax.websocket.CloseReason;
+import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -54,6 +56,8 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
 
     private static final String HEARTBEAT_PONG_MSG = "--heartbeat-pong--";
 
+    private static final String MSG_AVAILABLE_TAILERS = "availableTailers:";
+
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
 
     private LogTailerManager logTailerManager;
@@ -70,13 +74,14 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
     }
 
     @OnMessage
-    public void onMessage(Session session, String message) {
+    public void onMessage(Session session, String message) throws IOException {
         if (HEARTBEAT_PING_MSG.equals(message)) {
             session.getAsyncRemote().sendText(HEARTBEAT_PONG_MSG);
             return;
         }
         if (message != null && message.startsWith(COMMAND_JOIN)) {
             addSession(session, message);
+            broadcastAvailableTailers();
         } else if (COMMAND_LEAVE.equals(message)) {
             removeSession(session);
         }
@@ -106,6 +111,13 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
                 }
             }
         }
+    }
+
+    private void broadcastAvailableTailers() throws IOException {
+        JsonWriter jsonWriter = new JsonWriter();
+        jsonWriter.nullWritable(false);
+        jsonWriter.write(logTailerManager.getLogTailerInfoList());
+        broadcast(MSG_AVAILABLE_TAILERS + jsonWriter.toString());
     }
 
     private void addSession(Session session, String message) {

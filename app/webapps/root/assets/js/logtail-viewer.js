@@ -29,7 +29,14 @@ function LogtailViewer(endpoint, tailers) {
                 let msg = event.data;
                 let idx = msg.indexOf(":");
                 if (idx !== -1) {
-                    self.printMessage(msg.substring(0, idx), msg.substring(idx + 1));
+                    let command = msg.substring(0, idx);
+                    if (command === "availableTailers") {
+                        console.log(msg.substring(idx + 1));
+                        let payload = JSON.parse(msg.substring(idx + 1));
+                        console.log(payload);
+                    } else {
+                        self.printMessage(msg.substring(0, idx), msg.substring(idx + 1));
+                    }
                 }
             }
         };

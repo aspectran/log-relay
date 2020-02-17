@@ -28,27 +28,45 @@ public class LogTailer extends AbstractLifeCycle {
     private final String name;
 
     /** the log file to tail */
-    private final String logFile;
+    private final String file;
 
     /** how frequently to check for file changes; defaults to 1 second */
     private final long sampleInterval;
+
+    private String visualizerName;
 
     private TailerListener tailerListener;
 
     private Tailer tailer;
 
-    public LogTailer(String name, String logFile) {
-        this(name, logFile, DEFAULT_SAMPLE_INTERVAL);
+    public LogTailer(String name, String file) {
+        this(name, file, DEFAULT_SAMPLE_INTERVAL);
     }
 
-    public LogTailer(String name, String logFile, long sampleInterval) {
+    public LogTailer(String name, String file, long sampleInterval) {
         this.name = name;
-        this.logFile = logFile;
+        this.file = file;
         this.sampleInterval = sampleInterval;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public long getSampleInterval() {
+        return sampleInterval;
+    }
+
+    public String getVisualizerName() {
+        return visualizerName;
+    }
+
+    public void setVisualizerName(String visualizerName) {
+        this.visualizerName = visualizerName;
     }
 
     public void setEndpoint(LogtailEndpoint endpoint) {
@@ -59,7 +77,7 @@ public class LogTailer extends AbstractLifeCycle {
         if (tailerListener == null) {
             throw new IllegalStateException("No TailerListener configured");
         }
-        tailer = Tailer.create(new File(logFile), tailerListener, sampleInterval, true);
+        tailer = Tailer.create(new File(file), tailerListener, sampleInterval, true);
     }
 
     protected void doStop() throws Exception {

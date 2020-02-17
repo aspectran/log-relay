@@ -6,11 +6,10 @@
     <bean id="logTailerManager" class="app.relayer.LogTailerManager">
         <arguments>
             <item>#{class:app.relayer.LogtailEndpoint}</item>
-            <item type="array">
-                <bean class="app.relayer.LogTailer">
+            <item>
+                <bean class="app.relayer.LogTailerConfig">
                     <arguments>
-                        <item>app-log</item>
-                        <item>#{basePath}/logs/app.log</item>
+                        <item valueType="file">#{basePath}/config/logtail-config.apon</item>
                     </arguments>
                 </bean>
             </item>

@@ -43,7 +43,7 @@ public class LogTailerManager {
 
     public LogTailerManager(LogtailEndpoint endpoint, LogTailerConfig tailerConfig) {
         this(endpoint);
-//        addLogTailer(tailers);
+        addLogTailer(tailerConfig);
     }
 
     public void addLogTailer(LogTailer... tailers) {
@@ -55,45 +55,78 @@ public class LogTailerManager {
         }
     }
 
-    void join(Session session, String[] names) {
-        List<String> list = new ArrayList<>();
-        String[] existingNames = (String[])session.getUserProperties().get(TAILERS_PROPERTY);
-        if (existingNames != null) {
-            Collections.addAll(list, existingNames);
+    public void addLogTailer(LogTailerConfig tailerConfig) {
+        if (tailerConfig == null) {
+            throw new IllegalArgumentException("tailerConfig must not be null");
         }
-        for (String name : names) {
-            LogTailer tailer = tailers.get(name);
-            if (tailer != null) {
-                list.add(name);
-                if (!tailer.isRunning()) {
-                    try {
-                        tailer.start();
-                    } catch (Exception e) {
-                        // ignore
+        List<LogTailerInfo> tailerInfoList = tailerConfig.getLogTailerInfoList();
+        for (LogTailerInfo tailerInfo : tailerInfoList) {
+            String name = tailerInfo.getName();
+            String logFile = tailerInfo.getFile();
+            long sampleInterval = tailerInfo.getSampleInterval();
+            String visualizer = tailerInfo.getVisualizer();
+            LogTailer tailer = new LogTailer(name, logFile, sampleInterval);
+            tailer.setVisualizerName(visualizer);
+            addLogTailer(tailer);
+        }
+    }
+
+    public List<LogTailerInfo> getLogTailerInfoList() {
+        List<LogTailerInfo> tailerInfoList = new ArrayList<>();
+        for (LogTailer tailer : tailers.values()) {
+            LogTailerInfo tailerInfo = new LogTailerInfo();
+            tailerInfo.setName(tailer.getName());
+            tailerInfo.setFile(tailer.getFile());
+            tailerInfo.setSampleInterval(tailer.getSampleInterval());
+            tailerInfo.setVisualizer(tailer.getVisualizerName());
+            tailerInfoList.add(tailerInfo);
+        }
+        return tailerInfoList;
+    }
+
+    void join(Session session, String[] names) {
+        if (!tailers.isEmpty()) {
+            List<String> list = new ArrayList<>();
+            String[] existingNames = (String[])session.getUserProperties().get(TAILERS_PROPERTY);
+            if (existingNames != null) {
+                Collections.addAll(list, existingNames);
+            }
+            for (String name : names) {
+                LogTailer tailer = tailers.get(name);
+                if (tailer != null) {
+                    list.add(name);
+                    if (!tailer.isRunning()) {
+                        try {
+                            tailer.start();
+                        } catch (Exception e) {
+                            // ignore
+                        }
                     }
                 }
             }
+            session.getUserProperties().put(TAILERS_PROPERTY, list.toArray(new String[0]));
         }
-        session.getUserProperties().put(TAILERS_PROPERTY, list.toArray(new String[0]));
     }
 
     void release(Session session) {
-        String[] names = (String[])session.getUserProperties().get(TAILERS_PROPERTY);
-        if (names != null) {
-            for (String name : names) {
-                LogTailer tailer = tailers.get(name);
-                if (tailer != null && tailer.isRunning() && !isUsingTailer(name)) {
-                    try {
-                        tailer.stop();
-                    } catch (Exception e) {
-                        // ignore
+        if (!tailers.isEmpty()) {
+            String[] names = (String[])session.getUserProperties().get(TAILERS_PROPERTY);
+            if (names != null) {
+                for (String name : names) {
+                    LogTailer tailer = tailers.get(name);
+                    if (tailer != null && tailer.isRunning() && !isUsedTailer(name)) {
+                        try {
+                            tailer.stop();
+                        } catch (Exception e) {
+                            // ignore
+                        }
                     }
                 }
             }
         }
     }
 
-    private boolean isUsingTailer(String name) {
+    private boolean isUsedTailer(String name) {
         for (Session session : endpoint.getSessions()) {
             String[] names = (String[])session.getUserProperties().get(TAILERS_PROPERTY);
             if (names != null) {
