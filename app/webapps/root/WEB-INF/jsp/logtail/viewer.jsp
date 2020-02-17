@@ -1,12 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<div class="grid-x grid-padding-x">
+<div class="grid-x">
     <div class="cell">
         <div class="log-container">
             <div class="log-header">
                 <ul class="tab">
                     <li>app-log</li>
-                    <li>app-log2</li>
                 </ul>
                 <a class="bite-tail" title="Scroll to End of Log">
                     <span class="tail-status"></span>
@@ -16,7 +15,6 @@
                 <div class="stack"></div>
             </div>
             <pre id="app-log" class="log-tail"></pre>
-            <pre id="app-log2" class="log-tail"></pre>
         </div>
     </div>
 </div>
