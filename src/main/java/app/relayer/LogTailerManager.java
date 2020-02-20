@@ -86,15 +86,28 @@ public class LogTailerManager {
 
     void join(Session session, String[] names) {
         if (!tailers.isEmpty()) {
-            List<String> list = new ArrayList<>();
-            String[] existingNames = (String[])session.getUserProperties().get(TAILERS_PROPERTY);
-            if (existingNames != null) {
-                Collections.addAll(list, existingNames);
-            }
-            for (String name : names) {
-                LogTailer tailer = tailers.get(name);
-                if (tailer != null) {
-                    list.add(name);
+            if (names != null && names.length > 0) {
+                List<String> list = new ArrayList<>();
+                String[] existingNames = (String[])session.getUserProperties().get(TAILERS_PROPERTY);
+                if (existingNames != null) {
+                    Collections.addAll(list, existingNames);
+                }
+                for (String name : names) {
+                    LogTailer tailer = tailers.get(name);
+                    if (tailer != null) {
+                        list.add(name);
+                        if (!tailer.isRunning()) {
+                            try {
+                                tailer.start();
+                            } catch (Exception e) {
+                                // ignore
+                            }
+                        }
+                    }
+                }
+                session.getUserProperties().put(TAILERS_PROPERTY, list.toArray(new String[0]));
+            } else {
+                for (LogTailer tailer : tailers.values()) {
                     if (!tailer.isRunning()) {
                         try {
                             tailer.start();
@@ -104,7 +117,6 @@ public class LogTailerManager {
                     }
                 }
             }
-            session.getUserProperties().put(TAILERS_PROPERTY, list.toArray(new String[0]));
         }
     }
 
@@ -115,6 +127,16 @@ public class LogTailerManager {
                 for (String name : names) {
                     LogTailer tailer = tailers.get(name);
                     if (tailer != null && tailer.isRunning() && !isUsedTailer(name)) {
+                        try {
+                            tailer.stop();
+                        } catch (Exception e) {
+                            // ignore
+                        }
+                    }
+                }
+            } else {
+                for (LogTailer tailer : tailers.values()) {
+                    if (!tailer.isRunning()) {
                         try {
                             tailer.stop();
                         } catch (Exception e) {

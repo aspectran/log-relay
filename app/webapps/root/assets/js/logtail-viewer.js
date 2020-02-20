@@ -1,22 +1,24 @@
-function LogtailViewer(endpoint, tailers) {
+function LogtailViewer(endpoint, establisher) {
     this.endpoint = endpoint;
-    this.tailers = tailers;
+    this.establisher = establisher;
     this.socket = null;
     this.heartbeatTimer = null;
     this.scrollTimer = null;
+    this.tailers = null;
+    this.established = false;
 
     this.openSocket = function() {
         if (this.socket) {
             this.socket.close();
         }
-        let url = new URL(this.endpoint, location.href);
+        let url = new URL(this.endpoint.url, location.href);
         url.protocol = url.protocol.replace('https:', 'wss:');
         url.protocol = url.protocol.replace('http:', 'ws:');
         this.socket = new WebSocket(url.href);
         let self = this;
         this.socket.onopen = function (event) {
             self.printEventMessage("Socket connection successful");
-            self.socket.send("JOIN:" + self.tailers);
+            self.socket.send("JOIN:");
             self.heartbeatPing();
             self.switchTailBite(false, true);
         };
@@ -27,15 +29,19 @@ function LogtailViewer(endpoint, tailers) {
                     return;
                 }
                 let msg = event.data;
-                let idx = msg.indexOf(":");
-                if (idx !== -1) {
-                    let command = msg.substring(0, idx);
-                    if (command === "availableTailers") {
-                        console.log(msg.substring(idx + 1));
-                        let payload = JSON.parse(msg.substring(idx + 1));
-                        console.log(payload);
+                if (msg) {
+                    if (self.established) {
+                        let idx = msg.indexOf(":");
+                        if (idx !== -1) {
+                            self.printMessage(msg.substring(0, idx), msg.substring(idx + 1));
+                        }
                     } else {
-                        self.printMessage(msg.substring(0, idx), msg.substring(idx + 1));
+                        try {
+                            let payload = JSON.parse(msg);
+                            self.establish(payload);
+                        } catch (e) {
+                            self.printErrorMessage(e.name + ": " + e.message);
+                        }
                     }
                 }
             }
@@ -59,6 +65,15 @@ function LogtailViewer(endpoint, tailers) {
             this.socket.close();
             this.socket = null;
         }
+    };
+
+    this.establish = function(payload) {
+        console.log(payload);
+        if (this.establisher) {
+            this.establisher(this.endpoint, payload);
+        }
+        this.tailers = payload;
+        this.established = true;
     };
 
     this.heartbeatPing = function() {

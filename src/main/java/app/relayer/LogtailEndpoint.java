@@ -117,7 +117,7 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
         JsonWriter jsonWriter = new JsonWriter();
         jsonWriter.nullWritable(false);
         jsonWriter.write(logTailerManager.getLogTailerInfoList());
-        broadcast(MSG_AVAILABLE_TAILERS + jsonWriter.toString());
+        broadcast(jsonWriter.toString());
     }
 
     private void addSession(Session session, String message) {
