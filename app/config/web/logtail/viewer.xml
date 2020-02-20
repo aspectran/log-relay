@@ -8,7 +8,7 @@
             <item name="headline">Log Relayer</item>
             <item name="teaser">A web application that tails log files and relays the results in real time to the log viewer via the websocket endpoint.</item>
             <item name="include">logtail/viewer</item>
-            <item name="style">fluid plate solid</item>
+            <item name="style">fluid plate compact</item>
         </echo>
         <dispatch name="templates/frame"/>
     </translet>

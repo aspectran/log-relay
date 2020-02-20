@@ -101,29 +101,29 @@
     </div>
 </nav>
 <section itemscope itemtype="http://schema.org/Article">
-    <div id="masthead">
+    <div id="masthead" class="masthead-compact">
         <div class="grid-container ${page.style}">
             <div class="grid-x">
                 <div class="cell">
                     <header>
-                        <dl class="tabs" data-tabs>
-                            <dd class="tabs-title is-active"><a href="#panel1v" aria-selected="true">Tab 1</a></dd>
-                            <dd class="tabs-title"><a href="#panel2v">Tab 2</a></dd>
-                            <dd class="tabs-title"><a href="#panel3v">Tab 3</a></dd>
-                            <dd class="tabs-title"><a href="#panel4v">Tab 4</a></dd>
-                            <dd class="tabs-title"><a href="#panel5v">Tab 5</a></dd>
-                            <dd class="tabs-title"><a href="#panel6v">Tab 6</a></dd>
-                        </dl>
+                        <p class="subheadline" itemprop="alternativeHeadline">${page.subheadline}</p>
+                        <h1 itemprop="headline">${page.headline}</h1>
+                        <p class="teaser" itemprop="description">
+                            ${page.teaser}
+                        </p>
                     </header>
-                    <div class="hexagons">
-                        <div class="hexagon hex1"></div>
-                        <div class="hexagon hex2"></div>
-                        <div class="hexagon hex3"></div>
-                        <div class="hexagon hex4"></div>
-                        <div class="hexagon hex5"></div>
-                        <div class="hexagon hex6"></div>
-                    </div>
+                    <dl class="tabs" data-tabs>
+                        <dd class="tabs-title is-active" id="tab-server-1"><a href="#server-1"><span class="bullet icon-archive"></span> Server 1 <span class="indicator icon-eye blink on"></span></a></dd>
+                        <dd class="tabs-title" id="tab-server-2"><a href="#server-2"><span class="bullet icon-archive"></span> Server 2 <span class="indicator icon-eye"></span></a></dd>
+                    </dl>
                 </div>
+            </div>
+            <div class="hexagons">
+                <div class="hexagon hex1"></div>
+                <div class="hexagon hex2"></div>
+                <div class="hexagon hex3"></div>
+                <div class="hexagon hex5"></div>
+                <div class="hexagon hex6"></div>
             </div>
         </div>
         <div class="grid-container grid-x breadcrumbs-bar ${page.style}">
@@ -137,13 +137,15 @@
             </div>
         </div>
     </div>
+    <div class="grid-container t15 ${page.style}">
     <c:if test="${not empty page.include}">
         <jsp:include page="/WEB-INF/jsp/${page.include}.jsp"/>
     </c:if>
+    </div>
 </section>
 <div class="grid-container ${page.style}">
     <div id="up-to-top" class="grid-x">
-        <div class="small-12 cell" style="text-align: right;">
+        <div class="cell" style="text-align: right;">
             <a class="iconfont" href="#top-of-page">&#xf108;</a>
         </div>
     </div>

@@ -7,11 +7,18 @@
     overflow: auto;
     padding : 0 10px;
 }
-.log-header ul.tab {
+.log-header h4 {
+    float: left;
+    width: 88%;
+    font-size: .85em;
+    font-weight: normal;
+    line-height: 26px;
+}
+.log-header ul.tabs {
     float: left;
     margin: 4px 0 0 0;
 }
-.log-header ul.tab li {
+.log-header ul.tabs li {
     float: left;
     padding: 9px 20px;
     margin: 0;
@@ -22,36 +29,36 @@
     cursor: pointer;
     transition: .3s;
 }
-.log-header ul.tab li:first-child {
+.log-header ul.tabs li:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
-.log-header ul.tab li:last-child {
+.log-header ul.tabs li:last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
-.log-header ul.tab li.active {
+.log-header ul.tabs li.active {
     background-color: #ac0032;
     color: #fff;
 }
-.log-header ul.tab li:hover {
+.log-header ul.tabs li:hover {
     color: #ac0032;
     filter: brightness(107%);
 }
-.log-header ul.tab li.active:hover {
+.log-header ul.tabs li.active:hover {
     color: #fff;
 }
-.log-header ul.tab li {
+.log-header ul.tabs li {
     padding: 0 20px;
     line-height: 26px;
 }
-.log-header ul.tab li.wait {
+.log-header ul.tabs li.wait {
     cursor: wait;
 }
-.log-header ul.tab li:first-child {
+.log-header ul.tabs li:first-child {
     border-bottom-left-radius: 0;
 }
-.log-header ul.tab li:last-child {
+.log-header ul.tabs li:last-child {
     border-bottom-right-radius: 0;
 }
 .log-header .bite-tail {
