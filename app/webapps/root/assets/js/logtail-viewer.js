@@ -1,6 +1,7 @@
-function LogtailViewer(endpoint, establisher) {
+function LogtailViewer(endpoint, callback) {
     this.endpoint = endpoint;
-    this.establisher = establisher;
+    this.callback = callback;
+    this.endpointContent = null;
     this.socket = null;
     this.heartbeatTimer = null;
     this.scrollTimer = null;
@@ -29,18 +30,15 @@ function LogtailViewer(endpoint, establisher) {
                     return;
                 }
                 let msg = event.data;
-                if (msg) {
+                let idx = msg.indexOf(":");
+                if (idx !== -1) {
                     if (self.established) {
-                        let idx = msg.indexOf(":");
-                        if (idx !== -1) {
-                            self.printMessage(msg.substring(0, idx), msg.substring(idx + 1));
-                        }
+                        self.printMessage(msg.substring(0, idx), msg.substring(idx + 1));
                     } else {
-                        try {
-                            let payload = JSON.parse(msg);
+                        let command = msg.substring(0, idx);
+                        if (command === "availableTailers") {
+                            let payload = JSON.parse(msg.substring(idx + 1));
                             self.establish(payload);
-                        } catch (e) {
-                            self.printErrorMessage(e.name + ": " + e.message);
                         }
                     }
                 }
@@ -69,8 +67,9 @@ function LogtailViewer(endpoint, establisher) {
 
     this.establish = function(payload) {
         console.log(payload);
-        if (this.establisher) {
-            this.establisher(this.endpoint, payload);
+        if (this.callback) {
+            this.endpointContent = this.callback(this, this.endpoint, payload);
+            console.log(this.endpointContent.html());
         }
         this.tailers = payload;
         this.established = true;
@@ -93,36 +92,36 @@ function LogtailViewer(endpoint, establisher) {
     this.printMessage = function(tailer, text) {
         this.visualize(tailer, text);
         let line = $("<p/>").text(text);
-        let logtail = $("#" + tailer);
+        let logtail = $("#logtail-" + tailer);
         logtail.append(line);
         this.scrollToBottom(logtail);
     };
 
     this.printEventMessage = function(text, tailer) {
-        let logtail = (tailer ? $("#" + tailer) : $(".log-tail"));
+        let logtail = (tailer ? $("#logtail-" + tailer) : $(".logtail"));
         $("<p/>").addClass("event").html(text).appendTo(logtail);
         this.scrollToBottom(logtail);
     };
 
     this.printErrorMessage = function(text, tailer) {
-        let logtail = (tailer ? $("#" + tailer) : $(".log-tail"));
+        let logtail = (tailer ? $("#logtail-" + tailer) : $(".logtail"));
         $("<p/>").addClass("event error").html(text).appendTo(logtail);
         this.scrollToBottom(logtail);
     };
 
     this.switchTailBite = function(logtail, status) {
         if (!logtail) {
-            logtail = $(".log-tail");
+            logtail = $(".logtail");
         }
         if (status !== true && status !== false) {
             status = !logtail.data("bite");
         }
         if (status) {
-            logtail.closest(".log-container").find(".tail-status").addClass("active");
+            logtail.closest(".logtail-content").find(".tail-status").addClass("active");
             logtail.data("bite", true);
             this.scrollToBottom(logtail)
         } else {
-            logtail.closest(".log-container").find(".tail-status").removeClass("active");
+            logtail.closest(".logtail-content").find(".tail-status").removeClass("active");
             logtail.data("bite", false);
         }
     };

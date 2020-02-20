@@ -112,9 +112,8 @@
                             ${page.teaser}
                         </p>
                     </header>
-                    <dl class="tabs" data-tabs>
-                        <dd class="tabs-title is-active" id="tab-server-1"><a href="#server-1"><span class="bullet icon-archive"></span> Server 1 <span class="indicator icon-eye blink on"></span></a></dd>
-                        <dd class="tabs-title" id="tab-server-2"><a href="#server-2"><span class="bullet icon-archive"></span> Server 2 <span class="indicator icon-eye"></span></a></dd>
+                    <dl class="endpoints" data-tabs>
+                        <dd class="tabs-title"><a href="#0"><span class="bullet icon-archive"></span> <span class="title">Endpoint 0</span> <span class="indicator icon-eye"></span></a></dd>
                     </dl>
                 </div>
             </div>

@@ -81,7 +81,7 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
         }
         if (message != null && message.startsWith(COMMAND_JOIN)) {
             addSession(session, message);
-            broadcastAvailableTailers();
+            sendAvailableTailers(session);
         } else if (COMMAND_LEAVE.equals(message)) {
             removeSession(session);
         }
@@ -113,11 +113,11 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
         }
     }
 
-    private void broadcastAvailableTailers() throws IOException {
+    private void sendAvailableTailers(Session session) throws IOException {
         JsonWriter jsonWriter = new JsonWriter();
         jsonWriter.nullWritable(false);
         jsonWriter.write(logTailerManager.getLogTailerInfoList());
-        broadcast(jsonWriter.toString());
+        session.getAsyncRemote().sendText(MSG_AVAILABLE_TAILERS + jsonWriter.toString());
     }
 
     private void addSession(Session session, String message) {

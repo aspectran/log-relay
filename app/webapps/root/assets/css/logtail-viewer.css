@@ -1,24 +1,24 @@
-.log-container {
+.logtail-content {
     background-color: #222;
 }
-.log-header {
+.logtail-content .status {
     background-color: #444;
     color: #f1f1f1;
     overflow: auto;
     padding : 0 10px;
 }
-.log-header h4 {
+.logtail-content .status h4 {
     float: left;
     width: 88%;
     font-size: .85em;
     font-weight: normal;
     line-height: 26px;
 }
-.log-header ul.tabs {
+.logtail-content .status ul.tabs {
     float: left;
     margin: 4px 0 0 0;
 }
-.log-header ul.tabs li {
+.logtail-content .status ul.tabs li {
     float: left;
     padding: 9px 20px;
     margin: 0;
@@ -29,43 +29,43 @@
     cursor: pointer;
     transition: .3s;
 }
-.log-header ul.tabs li:first-child {
+.logtail-content .status ul.tabs li:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
 }
-.log-header ul.tabs li:last-child {
+.logtail-content .status ul.tabs li:last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
-.log-header ul.tabs li.active {
+.logtail-content .status ul.tabs li.active {
     background-color: #ac0032;
     color: #fff;
 }
-.log-header ul.tabs li:hover {
+.logtail-content .status ul.tabs li:hover {
     color: #ac0032;
     filter: brightness(107%);
 }
-.log-header ul.tabs li.active:hover {
+.logtail-content .status ul.tabs li.active:hover {
     color: #fff;
 }
-.log-header ul.tabs li {
+.logtail-content .status ul.tabs li {
     padding: 0 20px;
     line-height: 26px;
 }
-.log-header ul.tabs li.wait {
+.logtail-content .status ul.tabs li.wait {
     cursor: wait;
 }
-.log-header ul.tabs li:first-child {
+.logtail-content .status ul.tabs li:first-child {
     border-bottom-left-radius: 0;
 }
-.log-header ul.tabs li:last-child {
+.logtail-content .status ul.tabs li:last-child {
     border-bottom-right-radius: 0;
 }
-.log-header .bite-tail {
+.logtail-content .status .bite-tail {
     float: right;
     line-height: 26px;
 }
-.log-header .bite-tail .tail-status {
+.logtail-content .status .bite-tail .tail-status {
     display: inline-block;
     height: 20px;
     width: 20px;
@@ -73,7 +73,7 @@
     border-radius: 50%;
     position: relative;
 }
-.log-header .bite-tail .tail-status::after {
+.logtail-content .status .bite-tail .tail-status::after {
     content: "";
     position: absolute;
     top: 0;
@@ -87,10 +87,10 @@
     background: #f1f1f1;
     border-radius: 50%;
 }
-.log-header .bite-tail .tail-status.active {
+.logtail-content .status .bite-tail .tail-status.active {
     background-color: #39aa56;
 }
-.log-tail {
+.logtail-content .logtail {
     clear: both;
     margin: 0;
     padding: 10px;
@@ -100,7 +100,7 @@
     background: transparent;
     border: none;
 }
-.log-tail p {
+.logtail-content .logtail p {
     font-size: 12px;
     line-height: 19px;
     white-space: nowrap;
@@ -108,7 +108,7 @@
     margin: 0;
     padding: 0;
 }
-.log-tail p.event {
+.logtail-content .logtail p.event {
     border-radius: 20px;
     text-align: center;
     border: 1px solid rgba(186, 254, 230, 0.53);
@@ -117,7 +117,7 @@
     color: #fff;
     background-color: #333;
 }
-.log-tail p.event.error {
+.logtail-content .logtail p.event.error {
     background-color: palevioletred;
     border: 1px solid palevioletred;
     color: yellow;
