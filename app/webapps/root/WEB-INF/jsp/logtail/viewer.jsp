@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <div class="endpoint-content">
     <dl class="logtails tabs b0">
-        <dd class="tabs-title"><a><span class="bullet icon-archive"></span> <span class="title"> </span> <span class="indicator icon-eye"></span></a></dd>
+        <dd class="tabs-title"><a><span class="bullet fi-list-bullet"></span> <span class="title"> </span> <span class="indicator fi-loop"></span></a></dd>
     </dl>
     <div class="logtail-content">
         <div class="status">
@@ -23,10 +23,6 @@
     const endpoints = [
         {
             name: "Server-1",
-            url: "/logtail"
-        },
-        {
-            name: "Server-2",
             url: "/logtail"
         }
     ];
@@ -146,7 +142,9 @@
             .data("logtail-index", index).data("logtail-name", tailer.name);
         content.insertAfter($(".logtail-content").last());
         if (tailer.visualizer) {
-            content.find(".missile-track").show();
+            content.find(".missile-track")
+                .addClass("available").show()
+                .data("launcher", tailer.visualizer);
         }
         return content.show();
     }

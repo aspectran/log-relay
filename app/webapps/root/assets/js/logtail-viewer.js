@@ -7,6 +7,8 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     this.established = false;
     this.logtails = null;
     this.pendingMessages = [];
+    this.missileTracks = {};
+    this.indicators = {};
 
     this.openSocket = function() {
         if (this.socket) {
@@ -32,8 +34,8 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
                 let idx = msg.indexOf(":");
                 if (idx !== -1) {
                     if (self.established) {
-                        let tailerName = msg.substring(0, idx);
-                        self.printMessage(tailerName, msg.substring(idx + 1));
+                        let logtailName = msg.substring(0, idx);
+                        self.printMessage(logtailName, msg.substring(idx + 1));
                     } else {
                         let command = msg.substring(0, idx);
                         if (command === "availableTailers") {
@@ -66,19 +68,26 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     };
 
     this.establish = function(tailers) {
-        console.log(tailers);
         if (this.endpointEstablished) {
             this.logtails = this.endpointEstablished(this.endpoint, tailers);
-            for (let key in tailers) {
-                let tailer = tailers[key];
-                let logtail = this.getLogtail(tailer.name);
-                if (logtail) {
-                    let self = this;
-                    self.switchTailing(tailer.name, true);
-                    logtail.closest(".logtail-content").find(".bite-tail").click(function () {
-                        self.switchTailing(tailer.name);
-                    });
-                }
+            for (let key in this.logtails) {
+                let logtail = this.logtails[key];
+                let logtailName = logtail.data("logtail-name");
+                let logtailContent = logtail.closest(".logtail-content");
+
+                let self = this;
+                logtailContent.find(".bite-tail").click(function () {
+                    self.switchTailing(logtailName);
+                }).click();
+
+                let missileTrack = logtailContent.find(".missile-track.available");
+                this.missileTracks[logtailName] = (missileTrack.length > 0 ? missileTrack : null);
+
+                let endpointIndex = logtail.data("endpoint-index");
+                let logtailIndex = logtail.data("logtail-index");
+                let indicator1 = $(".endpoints.tabs .tabs-title.available .indicator").eq(endpointIndex);
+                let indicator2 = $(".logtails.tabs .tabs-title.available .indicator").eq(logtailIndex);
+                this.indicators[logtailName] = [indicator1, indicator2];
             }
         }
         if (this.establishCompleted) {
@@ -107,16 +116,16 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }, 57000);
     };
 
-    this.getLogtail = function(tailerName) {
-        if (this.logtails && tailerName) {
-            return this.logtails[tailerName];
+    this.getLogtail = function(logtailName) {
+        if (this.logtails && logtailName) {
+            return this.logtails[logtailName];
         } else {
             return $(".logtail");
         }
     };
 
-    this.switchTailing = function(tailerName, status) {
-        let logtail = this.getLogtail(tailerName);
+    this.switchTailing = function(logtailName, status) {
+        let logtail = this.getLogtail(logtailName);
         if (status !== true && status !== false) {
             status = !logtail.data("tailing");
         }
@@ -156,18 +165,17 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printMessage = function(tailerName, text) {
-        let logtail = this.getLogtail(tailerName);
-        this.visualize(logtail, text);
-        this.indicate(logtail);
-        let line = $("<p/>").text(text);
-        logtail.append(line);
+    this.printMessage = function(logtailName, text) {
+        this.indicate(logtailName);
+        this.visualize(logtailName, text);
+        let logtail = this.getLogtail(logtailName);
+        $("<p/>").text(text).appendTo(logtail);
         this.scrollToBottom(logtail);
     };
 
-    this.printEventMessage = function(text, tailerName) {
-        if (tailerName) {
-            let logtail = this.getLogtail(tailerName);
+    this.printEventMessage = function(text, logtailName) {
+        if (logtailName) {
+            let logtail = this.getLogtail(logtailName);
             $("<p/>").addClass("event").html(text).appendTo(logtail);
             this.scrollToBottom(logtail);
         } else {
@@ -177,9 +185,9 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printErrorMessage = function(text, tailerName) {
-        if (tailerName) {
-            let logtail = this.getLogtail(tailerName);
+    this.printErrorMessage = function(text, logtailName) {
+        if (logtailName) {
+            let logtail = this.getLogtail(logtailName);
             $("<p/>").addClass("event error").html(text).appendTo(logtail);
             this.scrollToBottom(logtail);
         } else {
@@ -189,33 +197,33 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.indicate = function(logtail) {
-        let endpointIndex = logtail.data("endpoint-index");
-        let logtailIndex = logtail.data("logtail-index");
-        setTimeout(function() {
-            let indicator1 = $(".endpoints.tabs .tabs-title.available .indicator").eq(endpointIndex);
-            if (!indicator1.hasClass("on")) {
-                indicator1.addClass("blink on");
-                setTimeout(function () {
-                    indicator1.removeClass("blink on");
-                }, 500);
+    this.indicate = function(logtailName) {
+        let indicators = this.indicators[logtailName];
+        if (indicators) {
+            for (let key in indicators) {
+                let indicator = indicators[key];
+                if (!indicator.hasClass("on")) {
+                    indicator.addClass("blink on");
+                    setTimeout(function () {
+                        indicator.removeClass("blink on");
+                    }, 500);
+                }
             }
-            let indicator2 = $(".logtails.tabs .tabs-title.available .indicator").eq(logtailIndex);
-            if (!indicator2.hasClass("on")) {
-                indicator2.addClass("blink on");
-                setTimeout(function () {
-                    indicator2.removeClass("blink on");
-                }, 500);
-            }
-        }, 2);
+        }
     };
 
-    this.visualize = function(logtail, text) {
-        let self = this;
-        setTimeout(function() {
-            let missileTrack = logtail.closest(".logtail-content").find(".missile-track");
-            self.launchMissile(missileTrack, text);
-        }, 1);
+    this.visualize = function(logtailName, text) {
+        let missileTrack = this.missileTracks[logtailName];
+        if (missileTrack) {
+            let self = this;
+            setTimeout(function () {
+                let launcher = missileTrack.data("launcher");
+                let launchMissile = self[launcher];
+                if (launchMissile) {
+                    launchMissile(missileTrack, text);
+                }
+            }, 1);
+        }
     };
 
     // A function for visualizing Aspectran app logs
@@ -223,12 +231,11 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     const pattern2 = /^Session ([\w\.]+) deleted in session data store/i;
     const pattern3 = /^Session ([\w\.]+) accessed, stopping timer, active requests=(\d+)/i;
     const pattern4 = /^Creating new session id=([\w\.]+)/i;
-    this.launchMissile = function(missileTrack, text) {
+    this.missileLaunch1 = function(missileTrack, text) {
         let idx = text.indexOf("] ");
         if (idx !== -1) {
             text = text.substring(idx + 2);
         }
-
         let sessionId = "";
         let requests = 0;
         if (pattern1.test(text) || pattern2.test(text)) {

@@ -2,7 +2,7 @@ tailer: {
     name: app-log
     file: /Users/Aspectran/Projects/aspectran/log-relayer/app/logs/app.log
     sampleInterval: 1000
-    visualizer: visualize0
+    visualizer: launchMissile1
 }
 tailer: {
     name: access-log
