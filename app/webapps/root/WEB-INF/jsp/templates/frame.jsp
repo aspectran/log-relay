@@ -55,7 +55,7 @@
             <a class="logo" href="/" title="Aspectran"><img src="https://aspectran.com/assets/img/aspectran-site-logo.png" alt="Aspectran"/></a>
         </div>
         <div class="title-bar-center">
-            <a href="#top-of-page">Aspectran</a>
+            <a href="#top-of-page">Log Relayer</a>
         </div>
         <div class="title-bar-right" data-toggle="gnb-menu">
             <a class="menu-icon" title="Menu"></a>
@@ -106,14 +106,18 @@
             <div class="grid-x">
                 <div class="cell">
                     <header>
+                        <c:if test="${not empty page.subheadline}">
                         <p class="subheadline" itemprop="alternativeHeadline">${page.subheadline}</p>
+                        </c:if>
+                        <c:if test="${not empty page.headline}">
                         <h1 itemprop="headline">${page.headline}</h1>
-                        <p class="teaser" itemprop="description">
-                            ${page.teaser}
-                        </p>
+                        </c:if>
+                        <c:if test="${not empty page.teaser}">
+                        <p class="teaser" itemprop="description">${page.teaser}</p>
+                        </c:if>
                     </header>
-                    <dl class="endpoints" data-tabs>
-                        <dd class="tabs-title"><a href="#0"><span class="bullet icon-archive"></span> <span class="title">Endpoint 0</span> <span class="indicator icon-eye"></span></a></dd>
+                    <dl class="endpoints tabs">
+                        <dd class="tabs-title"><a><span class="bullet icon-globe"></span> <span class="title"> </span> <span class="indicator icon-eye"></span></a></dd>
                     </dl>
                 </div>
             </div>
@@ -121,18 +125,14 @@
                 <div class="hexagon hex1"></div>
                 <div class="hexagon hex2"></div>
                 <div class="hexagon hex3"></div>
+                <c:if test="${not empty page.headline}">
                 <div class="hexagon hex5"></div>
                 <div class="hexagon hex6"></div>
+                </c:if>
             </div>
         </div>
         <div class="grid-container grid-x breadcrumbs-bar ${page.style}">
-            <div class="cell">
-                <nav role="navigation" aria-label="You are here:">
-                    <ul class="breadcrumbs" itemprop="breadcrumb">
-                        <li><a href="https://aspectran.com/en/">Aspectran</a></li>
-                        <li><a href="/">Log Relayer</a></li>
-                    </ul>
-                </nav>
+            <div class="cell breadcrumbs">
             </div>
         </div>
     </div>

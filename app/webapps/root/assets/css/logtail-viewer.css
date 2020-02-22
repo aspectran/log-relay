@@ -2,17 +2,18 @@
     background-color: #222;
 }
 .logtail-content .status {
-    background-color: #444;
-    color: #f1f1f1;
+    background-color: #677278;
+    color: #eee;
     overflow: auto;
     padding : 0 10px;
 }
 .logtail-content .status h4 {
     float: left;
     width: 88%;
-    font-size: .85em;
+    height: 27px;
+    line-height: 27px;
+    font-size: .9em;
     font-weight: normal;
-    line-height: 26px;
 }
 .logtail-content .status ul.tabs {
     float: left;
@@ -131,14 +132,14 @@
         left: calc(100% - 210px);
     }
 }
-.missile-route {
+.missile-track {
     position: relative;
     height: 120px;
     margin-bottom: 4px;
     background-color: #0d1939;
     overflow: hidden;
 }
-.missile-route .stack {
+.missile-track .stack {
     position: absolute;
     top: 0;
     right: 0;

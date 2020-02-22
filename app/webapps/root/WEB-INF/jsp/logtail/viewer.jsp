@@ -1,17 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <div class="endpoint-content">
-    <dl class="logtails tabs b0" data-tabs>
-        <dd class="tabs-title"><a href="#1"><span class="bullet icon-archive"></span> <span class="title">Logtail</span> <span class="indicator icon-eye"></span></a></dd>
+    <dl class="logtails tabs b0">
+        <dd class="tabs-title"><a><span class="bullet icon-archive"></span> <span class="title"> </span> <span class="indicator icon-eye"></span></a></dd>
     </dl>
     <div class="logtail-content">
         <div class="status">
             <h4 class="ellipses"></h4>
-            <a class="bite-tail" title="Scroll to End of Log">
+            <a href="#" class="bite-tail" title="Scroll to End of Log">
                 <span class="tail-status"></span>
             </a>
         </div>
-        <div class="missile-route">
+        <div class="missile-track" style="display: none">
             <div class="stack"></div>
         </div>
         <pre class="logtail"></pre>
@@ -30,71 +30,124 @@
             url: "/logtail"
         }
     ];
+    const logViewers = [];
+    let endpointIndex;
 
     $(function() {
-        for (let key in endpoints) {
-            let endpoint = endpoints[key];
-            let logViewer = new LogtailViewer(endpoint, drawLogtailsTabs);
-            try {
-                logViewer.openSocket();
-            } catch (e) {
-                logViewer.printErrorMessage("Socket connection failed");
-            }
-        }
-        $("dl.endpoints .tabs-title, dl.logtails .tabs-title").removeClass("is-active");
-        $("dl.endpoints .tabs-title:eq(0), dl.logtails .tabs-title:eq(0)").addClass("is-active");
-        $("dl.endpoints, dl.logtails").addClass("tabs");
+        endpointIndex = 0;
+        establishEndpoint(endpointIndex);
     });
 
-    function drawLogtailsTabs(viewer, endpoint, tailers) {
+    function establishEndpoint(index) {
+        let logViewer = new LogtailViewer(endpoints[index], endpointEstablished, establishCompleted);
+        try {
+            logViewer.openSocket();
+        } catch (e) {
+            logViewer.printErrorMessage("Socket connection failed");
+        }
+        logViewers.push(logViewer);
+    }
+
+    function endpointEstablished(endpoint, tailers) {
+        let endpointContent = drawLogtailsTabs(endpoint, tailers);
+        let logtails = [];
+        endpointContent.find(".logtail-content.available").each(function() {
+            let name = $(this).data("name");
+            logtails[name] = $(this).find(".logtail");
+        });
+        return logtails;
+    }
+
+    function establishCompleted() {
+        if (endpointIndex < endpoints.length - 1) {
+            establishEndpoint(++endpointIndex);
+        } else {
+            initializeTabs();
+        }
+    }
+
+    function initializeTabs() {
+        $(".endpoints.tabs .tabs-title.available").removeClass("is-active").eq(0).addClass("is-active");
+        $(".endpoint-content.available").hide().eq(0).show();
+        $(".endpoints.tabs .tabs-title.available").each(function() {
+            let index = $(this).data("index");
+            let endpointContent = $(".endpoint-content.available").eq(index);
+            endpointContent.find(".logtails.tabs .tabs-title.available").removeClass("is-active").eq(0).addClass("is-active");
+            endpointContent.find(".logtail-content.available").hide().eq(0).show();
+            //$(".endpoint").text($(this).data("endpoint"));
+        });
+        $(".endpoints.tabs .tabs-title.available a").click(function() {
+            $(".endpoints.tabs .tabs-title").removeClass("is-active");
+            let tab = $(this).closest(".tabs-title");
+            let index = tab.data("index");
+            tab.addClass("is-active");
+            $(".endpoint-content.available").hide().eq(index).show();
+            logViewers[index].refresh();
+        });
+        $(".logtails.tabs .tabs-title.available a").click(function() {
+            let endpointContent = $(this).closest(".endpoint-content");
+            let endpointIndex = endpointContent.data("index");
+            let logtailTab = $(this).closest(".tabs-title");
+            let logtailIndex = logtailTab.data("index");
+            endpointContent.find(".logtails.tabs .tabs-title").removeClass("is-active");
+            logtailTab.addClass("is-active");
+            let logtailContent = endpointContent.find(".logtail-content.available").hide().eq(logtailIndex).show();
+            let logtail = logtailContent.find(".logtail");
+            logViewers[endpointIndex].refresh(logtail);
+        });
+    }
+
+    function drawLogtailsTabs(endpoint, tailers) {
         let endpointContent = addEndpointsTab(endpoint);
         for (let key in tailers) {
             let tailer = tailers[key];
-            let logtailContent = addLogtailsTab(endpointContent, tailer);
-            logtailContent.find(".bite-tail").click(function() {
-                let logtail = logtailContent.find(".logtail");
-                viewer.switchTailBite(logtail, !logtail.data("bite"));
-            });
+            addLogtailsTab(endpointContent, tailer);
         }
         return endpointContent;
     }
 
     function addEndpointsTab(endpoint) {
-        let tabs = $("dl.endpoints");
-        let tab0 = tabs.find(".tabs-title:eq(0)");
-        let index = tabs.find(".tabs-title").length;
-        let tabId = "endpoint-tab-" + index;
-        let contentId = "endpoint-content-" + index;
+        let tabs = $(".endpoints.tabs");
+        let tab0 = tabs.find(".tabs-title").eq(0);
+        let index = tabs.find(".tabs-title").length - 1;
         let tab = tab0.hide().clone();
-        tab.attr("id", tabId);
+        tab.addClass("available");
+        tab.data("index", index);
+        tab.data("endpoint", endpoint.url);
         let a = tab.find("a");
-        a.attr("href", "#" + contentId);
         a.find(".title").text(" " + endpoint.name + " ");
         tab.show().appendTo(tabs);
-        let content = $(".endpoint-content:eq(0)").hide().clone();
-        content.attr("id", contentId);
-        content.data("tab-id", tabId);
+        let content = $(".endpoint-content").eq(0).hide().clone();
+        content.addClass("available");
+        content.data("index", index).data("name", endpoint.name);
         content.insertAfter($(".endpoint-content").last());
-        return content.show();
+        return content;
     }
 
     function addLogtailsTab(endpointContent, tailer) {
-        let tabs = endpointContent.find("dl.logtails");
-        let tab0 = tabs.find(".tabs-title:eq(0)");
-        let index = tabs.find(".tabs-title").length;
-        let tabId = "logtail-tab-" + index;
-        let contentId = "logtail-content-" + index;
+        let endpointIndex = endpointContent.data("index");
+        let endpointName = endpointContent.data("name");
+        let tabs = endpointContent.find(".logtails.tabs");
+        let tab0 = tabs.find(".tabs-title").eq(0);
+        let index = tabs.find(".tabs-title").length - 1;
         let tab = tab0.hide().clone();
-        tab.attr("id", tabId);
+        tab.addClass("available");
+        tab.data("index", index);
+        tab.attr("title", endpointName + " :: " + tailer.name);
         let a = tab.find("a");
-        a.attr("href", "#" + contentId);
         a.find(".title").text(" " + tailer.name + " ");
         tab.show().appendTo(tabs);
-        let content = $(".logtail-content:eq(0)").hide().clone();
-        content.attr("id", contentId);
-        content.find(".status h4").text(tailer.file);
-        let logtail = content.find(".logtail");
-        logtail.attr("id", "logtail-" + tailer.name);
+        let content = endpointContent.find(".logtail-content").eq(0).hide().clone();
+        content.addClass("available");
+        content.data("index", index).data("name", tailer.name);
+        content.find(".status h4").text("( " + endpointName + " )  " + tailer.file);
+        content.find(".logtail")
+            .data("endpoint-index", endpointIndex).data("endpoint-name", endpointName)
+            .data("logtail-index", index).data("logtail-name", tailer.name);
+        content.insertAfter($(".logtail-content").last());
+        if (tailer.visualizer) {
+            content.find(".missile-track").show();
+        }
         return content.show();
     }
 </script>

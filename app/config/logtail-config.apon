@@ -1,6 +1,11 @@
 tailer: {
     name: app-log
-    file: c:\Users\Gulendol\Projects\workspace\log-relayer\app\logs\app.log
+    file: /Users/Aspectran/Projects/aspectran/log-relayer/app/logs/app.log
     sampleInterval: 1000
     visualizer: visualize0
+}
+tailer: {
+    name: access-log
+    file: /Users/Aspectran/Projects/aspectran/log-relayer/app/logs/undertow-access.log
+    sampleInterval: 1000
 }
