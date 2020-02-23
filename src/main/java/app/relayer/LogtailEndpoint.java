@@ -21,6 +21,8 @@ import com.aspectran.core.util.StringUtils;
 import com.aspectran.core.util.json.JsonWriter;
 import com.aspectran.core.util.logging.Log;
 import com.aspectran.core.util.logging.LogFactory;
+import com.aspectran.core.util.security.InvalidPBTokenException;
+import com.aspectran.core.util.security.TimeLimitedPBTokenIssuer;
 import com.aspectran.web.socket.jsr356.ActivityContextAwareEndpoint;
 import com.aspectran.web.socket.jsr356.AspectranConfigurator;
 
@@ -31,6 +33,7 @@ import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -40,7 +43,7 @@ import java.util.Set;
 
 @Component
 @ServerEndpoint(
-        value = "/logtail",
+        value = "/logtail/{token}",
         configurator = AspectranConfigurator.class
 )
 @AvoidAdvice
@@ -67,9 +70,17 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
     }
 
     @OnOpen
-    public void onOpen(Session session) {
+    public void onOpen(@PathParam("token") String token, Session session) throws IOException {
+        try {
+            TimeLimitedPBTokenIssuer.validate(token);
+        } catch (InvalidPBTokenException e) {
+            log.error("Invalid token: " + token);
+            String reason = "Invalid token";
+            session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, reason));
+            throw new IOException(reason, e);
+        }
         if (log.isDebugEnabled()) {
-            log.debug("WebSocket connection established with session: " + session.getId());
+            log.debug("WebSocket connection established with token: " + token);
         }
     }
 

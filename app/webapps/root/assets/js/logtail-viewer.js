@@ -176,7 +176,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     this.printEventMessage = function(text, logtailName) {
         if (logtailName) {
             let logtail = this.getLogtail(logtailName);
-            $("<p/>").addClass("event").html(text).appendTo(logtail);
+            $("<p/>").addClass("event ellipses").html(text).appendTo(logtail);
             this.scrollToBottom(logtail);
         } else {
             for (let key in this.logtails) {

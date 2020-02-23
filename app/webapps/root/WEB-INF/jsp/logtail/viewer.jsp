@@ -20,18 +20,27 @@
 <link rel="stylesheet" href="/assets/css/logtail-viewer.css">
 <script src="/assets/js/logtail-viewer.js"></script>
 <script>
-    const endpoints = [
-        {
-            name: "Server-1",
-            url: "/logtail"
-        }
-    ];
+    const endpoints = [];
     const logViewers = [];
     let endpointIndex;
 
     $(function() {
-        endpointIndex = 0;
-        establishEndpoint(endpointIndex);
+        $.ajax({
+            url: "/endpoints/${page.token}",
+            type: 'get',
+            dataType: "json",
+            success: function(data) {
+                if (data) {
+                    for (let key in data) {
+                        endpoints.push(data[key]);
+                    }
+                    if (endpoints.length > 0) {
+                        endpointIndex = 0;
+                        establishEndpoint(endpointIndex);
+                    }
+                }
+            }
+        });
     });
 
     function establishEndpoint(index) {

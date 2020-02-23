@@ -9,7 +9,7 @@
             <item>
                 <bean class="app.relayer.LogTailerConfig">
                     <arguments>
-                        <item valueType="file">#{basePath}/config/logtail-config.apon</item>
+                        <item valueType="file">#{basePath}/config/logtailer-config.apon</item>
                     </arguments>
                 </bean>
             </item>

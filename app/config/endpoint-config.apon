@@ -1,0 +1,4 @@
+endpoint: {
+    name: Server-1
+    url: /logtail
+}

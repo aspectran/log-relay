@@ -7,6 +7,7 @@
         <echo id="page">
             <item name="include">logtail/viewer</item>
             <item name="style">fluid plate compact</item>
+            <item name="token">#{class:com.aspectran.core.util.security.TimeLimitedPBTokenIssuer^token}</item>
         </echo>
         <dispatch name="templates/frame"/>
     </translet>
