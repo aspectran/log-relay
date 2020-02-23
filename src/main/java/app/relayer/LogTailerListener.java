@@ -29,6 +29,10 @@ public class LogTailerListener implements TailerListener {
         this.endpoint = endpoint;
     }
 
+    public LogtailEndpoint getEndpoint() {
+        return endpoint;
+    }
+
     @Override
     public void init(Tailer tailer) {
     }

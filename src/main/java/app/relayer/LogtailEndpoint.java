@@ -85,14 +85,13 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
     }
 
     @OnMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) throws IOException, InterruptedException {
         if (HEARTBEAT_PING_MSG.equals(message)) {
             session.getAsyncRemote().sendText(HEARTBEAT_PONG_MSG);
             return;
         }
         if (message != null && message.startsWith(COMMAND_JOIN)) {
-            addSession(session, message);
-            sendAvailableTailers(session);
+            addSession(session, message.substring(COMMAND_JOIN.length()));
         } else if (COMMAND_LEAVE.equals(message)) {
             removeSession(session);
         }
@@ -127,13 +126,14 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
     private void sendAvailableTailers(Session session) throws IOException {
         JsonWriter jsonWriter = new JsonWriter();
         jsonWriter.nullWritable(false);
-        jsonWriter.write(logTailerManager.getLogTailerInfoList());
+        jsonWriter.write(logTailerManager.getLogTailerInfoList(false));
         session.getAsyncRemote().sendText(MSG_AVAILABLE_TAILERS + jsonWriter.toString());
     }
 
-    private void addSession(Session session, String message) {
+    private void addSession(Session session, String message) throws IOException {
         if (sessions.add(session)) {
-            String[] names = StringUtils.splitCommaDelimitedString(message.substring(COMMAND_JOIN.length()));
+            sendAvailableTailers(session);
+            String[] names = StringUtils.splitCommaDelimitedString(message);
             logTailerManager.join(session, names);
         }
     }

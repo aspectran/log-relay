@@ -63,21 +63,32 @@ public class LogTailerManager {
         for (LogTailerInfo tailerInfo : tailerInfoList) {
             String name = tailerInfo.getName();
             String logFile = tailerInfo.getFile();
-            long sampleInterval = tailerInfo.getSampleInterval();
+            String charset = tailerInfo.getCharset();
+            int sampleInterval = tailerInfo.getSampleInterval();
+            int bufferSize = tailerInfo.getBufferSize();
+            int lastLines = tailerInfo.getLastLines();
             String visualizer = tailerInfo.getVisualizer();
-            LogTailer tailer = new LogTailer(name, logFile, sampleInterval);
+            LogTailer tailer = new LogTailer(name, logFile, charset);
+            tailer.setSampleInterval(sampleInterval);
+            tailer.setBufferSize(bufferSize);
+            tailer.setLastLines(lastLines);
             tailer.setVisualizerName(visualizer);
             addLogTailer(tailer);
         }
     }
 
-    public List<LogTailerInfo> getLogTailerInfoList() {
+    public List<LogTailerInfo> getLogTailerInfoList(boolean detail) {
         List<LogTailerInfo> tailerInfoList = new ArrayList<>();
         for (LogTailer tailer : tailers.values()) {
             LogTailerInfo tailerInfo = new LogTailerInfo();
             tailerInfo.setName(tailer.getName());
             tailerInfo.setFile(tailer.getFile());
-            tailerInfo.setSampleInterval(tailer.getSampleInterval());
+            if (detail) {
+                tailerInfo.setCharset(tailer.getCharset().toString());
+                tailerInfo.setSampleInterval(tailer.getSampleInterval());
+                tailerInfo.setBufferSize((tailer.getBufferSize()));
+                tailerInfo.setLastLines((tailer.getLastLines()));
+            }
             tailerInfo.setVisualizer(tailer.getVisualizerName());
             tailerInfoList.add(tailerInfo);
         }
@@ -96,6 +107,7 @@ public class LogTailerManager {
                     LogTailer tailer = tailers.get(name);
                     if (tailer != null) {
                         list.add(name);
+                        tailer.readLastLines();
                         if (!tailer.isRunning()) {
                             try {
                                 tailer.start();
@@ -108,6 +120,7 @@ public class LogTailerManager {
                 session.getUserProperties().put(TAILERS_PROPERTY, list.toArray(new String[0]));
             } else {
                 for (LogTailer tailer : tailers.values()) {
+                    tailer.readLastLines();
                     if (!tailer.isRunning()) {
                         try {
                             tailer.start();

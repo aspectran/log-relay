@@ -11,7 +11,10 @@ public class LogTailerInfo extends AbstractParameters {
 
     private static final ParameterKey name;
     private static final ParameterKey file;
+    private static final ParameterKey charset;
     private static final ParameterKey sampleInterval;
+    private static final ParameterKey bufferSize;
+    private static final ParameterKey lastLines;
     private static final ParameterKey visualizer;
 
     private static final ParameterKey[] parameterKeys;
@@ -19,13 +22,19 @@ public class LogTailerInfo extends AbstractParameters {
     static {
         name = new ParameterKey("name", ValueType.STRING);
         file = new ParameterKey("file", ValueType.STRING);
-        sampleInterval = new ParameterKey("sampleInterval", ValueType.LONG);
+        charset = new ParameterKey("charset", ValueType.STRING);
+        sampleInterval = new ParameterKey("sampleInterval", ValueType.INT);
+        bufferSize = new ParameterKey("bufferSize", ValueType.INT);
+        lastLines = new ParameterKey("lastLines", ValueType.INT);
         visualizer = new ParameterKey("visualizer", ValueType.STRING);
 
         parameterKeys = new ParameterKey[] {
                 name,
                 file,
+                charset,
                 sampleInterval,
+                bufferSize,
+                lastLines,
                 visualizer
         };
     }
@@ -50,12 +59,36 @@ public class LogTailerInfo extends AbstractParameters {
         putValue(LogTailerInfo.file, file);
     }
 
-    public long getSampleInterval() {
-        return getLong(sampleInterval, 0);
+    public String getCharset() {
+        return getString(charset);
     }
 
-    public void setSampleInterval(long sampleInterval) {
+    public void setCharset(String charset) {
+        putValue(LogTailerInfo.charset, charset);
+    }
+
+    public int getSampleInterval() {
+        return getInt(sampleInterval, 0);
+    }
+
+    public void setSampleInterval(int sampleInterval) {
         putValue(LogTailerInfo.sampleInterval, sampleInterval);
+    }
+
+    public int getBufferSize() {
+        return getInt(bufferSize, 0);
+    }
+
+    public void setBufferSize(int bufferSize) {
+        putValue(LogTailerInfo.bufferSize, bufferSize);
+    }
+
+    public int getLastLines() {
+        return getInt(lastLines, 0);
+    }
+
+    public void setLastLines(int lastLines) {
+        putValue(LogTailerInfo.lastLines, lastLines);
     }
 
     public String getVisualizer() {
