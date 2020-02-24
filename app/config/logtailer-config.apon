@@ -1,11 +1,11 @@
 tailer: {
     name: app-log
-    file: /Users/Aspectran/Projects/aspectran/log-relayer/app/logs/app.log
+    file: ./app/logs/app.log
     lastLines: 16
     visualizer: launchMissile1
 }
 tailer: {
     name: access-log
-    file: /Users/Aspectran/Projects/aspectran/log-relayer/app/logs/undertow-access.log
+    file: ./app/logs/undertow-access.log
     lastLines: 20
 }

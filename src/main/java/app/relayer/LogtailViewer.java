@@ -1,7 +1,11 @@
 package app.relayer;
 
 import com.aspectran.core.activity.Translet;
+import com.aspectran.core.component.bean.annotation.Action;
+import com.aspectran.core.component.bean.annotation.AttrItems;
 import com.aspectran.core.component.bean.annotation.Component;
+import com.aspectran.core.component.bean.annotation.Dispatch;
+import com.aspectran.core.component.bean.annotation.Item;
 import com.aspectran.core.component.bean.annotation.Request;
 import com.aspectran.core.component.bean.annotation.Required;
 import com.aspectran.core.util.apon.AponReader;
@@ -14,15 +18,30 @@ import com.aspectran.web.activity.response.RestResponse;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>Created: 2020/02/23</p>
  */
 @Component
-public class EndpointManager {
+public class LogtailViewer {
 
-    private static final Log log = LogFactory.getLog(EndpointManager.class);
+    private static final Log log = LogFactory.getLog(LogtailViewer.class);
+
+    private static final String ENDPOINT_CONFIG_FILE = "/config/endpoint-config.apon";
+
+    @Request("/")
+    @Dispatch("templates/frame")
+    @Action("page")
+    public Map<String, String> viewer() {
+        Map<String, String> map = new HashMap<>();
+        map.put("include", "logtail/viewer");
+        map.put("style", "fluid plate compact");
+        map.put("token", TimeLimitedPBTokenIssuer.getToken());
+        return map;
+    }
 
     @Request("/endpoints/${token}")
     public RestResponse getEndpoints(Translet translet, @Required String token) throws IOException {
@@ -34,9 +53,8 @@ public class EndpointManager {
             }
             return new DefaultRestResponse().forbidden();
         }
-        File file = translet.getApplicationAdapter().toRealPathAsFile("/config/endpoint-config.apon");
-        EndpointConfig endpointConfig = new EndpointConfig();
-        AponReader.parse(file, endpointConfig);
+        File file = translet.getApplicationAdapter().toRealPathAsFile(ENDPOINT_CONFIG_FILE);
+        EndpointConfig endpointConfig = new EndpointConfig(file);
         List<EndpointInfo> endpointInfoList = endpointConfig.getEndpointInfoList();
         for (EndpointInfo endpointInfo : endpointInfoList) {
             String url = endpointInfo.getUrl();

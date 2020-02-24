@@ -33,7 +33,4 @@
         </settings>
     </aspect>
 
-    <append file="/config/web/logtail/manager.xml"/>
-    <append file="/config/web/logtail/viewer.xml"/>
-
 </aspectran>

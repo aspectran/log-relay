@@ -15,9 +15,11 @@
  */
 package app.relayer;
 
+import com.aspectran.core.component.bean.ablility.InitializableBean;
 import com.aspectran.core.component.bean.annotation.AvoidAdvice;
 import com.aspectran.core.component.bean.annotation.Component;
 import com.aspectran.core.util.StringUtils;
+import com.aspectran.core.util.apon.AponReader;
 import com.aspectran.core.util.json.JsonWriter;
 import com.aspectran.core.util.logging.Log;
 import com.aspectran.core.util.logging.LogFactory;
@@ -27,7 +29,6 @@ import com.aspectran.web.socket.jsr356.ActivityContextAwareEndpoint;
 import com.aspectran.web.socket.jsr356.AspectranConfigurator;
 
 import javax.websocket.CloseReason;
-import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -35,6 +36,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Collections;
@@ -47,9 +49,11 @@ import java.util.Set;
         configurator = AspectranConfigurator.class
 )
 @AvoidAdvice
-public class LogtailEndpoint extends ActivityContextAwareEndpoint {
+public class LogtailEndpoint extends ActivityContextAwareEndpoint implements InitializableBean {
 
     private static final Log log = LogFactory.getLog(LogtailEndpoint.class);
+
+    private static final String LOGTAILER_CONFIG_FILE = "/config/logtailer-config.apon";
 
     private static final String COMMAND_JOIN = "JOIN:";
 
@@ -65,8 +69,11 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
 
     private LogTailerManager logTailerManager;
 
-    public void setLogTailerManager(LogTailerManager logTailerManager) {
-        this.logTailerManager = logTailerManager;
+    @Override
+    public void initialize() throws Exception {
+        File file = getApplicationAdapter().toRealPathAsFile(LOGTAILER_CONFIG_FILE);
+        LogTailerConfig logTailerConfig = new LogTailerConfig(file);
+        this.logTailerManager = new LogTailerManager(this, logTailerConfig);
     }
 
     @OnOpen
@@ -85,7 +92,7 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint {
     }
 
     @OnMessage
-    public void onMessage(Session session, String message) throws IOException, InterruptedException {
+    public void onMessage(Session session, String message) throws IOException {
         if (HEARTBEAT_PING_MSG.equals(message)) {
             session.getAsyncRemote().sendText(HEARTBEAT_PONG_MSG);
             return;

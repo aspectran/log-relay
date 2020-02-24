@@ -26,14 +26,12 @@ public class LogTailerManager {
 
     private static final String TAILERS_PROPERTY = "tailers";
 
-    private final Map<String, LogTailer> tailers;
+    private final Map<String, LogTailer> tailers = new HashMap<>();
 
     private final LogtailEndpoint endpoint;
 
     public LogTailerManager(LogtailEndpoint endpoint) {
         this.endpoint = endpoint;
-        this.tailers = new HashMap<>();
-        endpoint.setLogTailerManager(this);
     }
 
     public LogTailerManager(LogtailEndpoint endpoint, LogTailer[] tailers) {
