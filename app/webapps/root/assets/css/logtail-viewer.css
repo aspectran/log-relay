@@ -30,43 +30,11 @@
     cursor: pointer;
     transition: .3s;
 }
-.logtail-content .status ul.tabs li:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-}
-.logtail-content .status ul.tabs li:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-.logtail-content .status ul.tabs li.active {
-    background-color: #ac0032;
-    color: #fff;
-}
-.logtail-content .status ul.tabs li:hover {
-    color: #ac0032;
-    filter: brightness(107%);
-}
-.logtail-content .status ul.tabs li.active:hover {
-    color: #fff;
-}
-.logtail-content .status ul.tabs li {
-    padding: 0 20px;
-    line-height: 26px;
-}
-.logtail-content .status ul.tabs li.wait {
-    cursor: wait;
-}
-.logtail-content .status ul.tabs li:first-child {
-    border-bottom-left-radius: 0;
-}
-.logtail-content .status ul.tabs li:last-child {
-    border-bottom-right-radius: 0;
-}
-.logtail-content .status .bite-tail {
+.logtail-content .status .tailing-switch {
     float: right;
     line-height: 26px;
 }
-.logtail-content .status .bite-tail .tail-status {
+.logtail-content .status .tailing-switch .tailing-status {
     display: inline-block;
     height: 20px;
     width: 20px;
@@ -74,7 +42,7 @@
     border-radius: 50%;
     position: relative;
 }
-.logtail-content .status .bite-tail .tail-status::after {
+.logtail-content .status .tailing-switch .tailing-status::after {
     content: "";
     position: absolute;
     top: 0;
@@ -88,7 +56,7 @@
     background: #f1f1f1;
     border-radius: 50%;
 }
-.logtail-content .status .bite-tail .tail-status.active {
+.logtail-content .status .tailing-switch .tailing-status.active {
     background-color: #39aa56;
 }
 .logtail-content .logtail {

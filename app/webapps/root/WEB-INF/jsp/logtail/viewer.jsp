@@ -7,8 +7,8 @@
     <div class="logtail-content">
         <div class="status">
             <h4 class="ellipses"></h4>
-            <a href="#" class="bite-tail" title="Scroll to End of Log">
-                <span class="tail-status"></span>
+            <a href="#" class="tailing-switch" title="Scroll to End of Log">
+                <span class="tailing-status"></span>
             </a>
         </div>
         <div class="missile-track" style="display: none">
@@ -21,8 +21,6 @@
 <script src="/assets/js/logtail-viewer.js"></script>
 <script>
     const endpoints = [];
-    const logViewers = [];
-    let endpointIndex;
 
     $(function() {
         $.ajax({
@@ -34,40 +32,48 @@
                     for (let key in data) {
                         endpoints.push(data[key]);
                     }
-                    if (endpoints.length > 0) {
-                        endpointIndex = 0;
-                        establishEndpoint(endpointIndex);
+                    for (let index = 0; index < endpoints.length; index++) {
+                        establishEndpoint(index);
                     }
                 }
             }
         });
     });
 
-    function establishEndpoint(index) {
-        let logViewer = new LogtailViewer(endpoints[index], endpointEstablished, establishCompleted);
+    function establishEndpoint(endpointIndex) {
+        function endpointEstablished(endpoint, tailers) {
+            let endpointContent = drawLogtailsTabs(endpoint, tailers);
+            endpointContent.find(".logtail-content.available").each(function() {
+                let logtail = $(this).find(".logtail");
+                let logtailIndex = logtail.data("logtail-index");
+                let logtailName = logtail.data("logtail-name");
+                let logtailContent = logtail.closest(".logtail-content");
+
+                endpoint.viewer.logtails[logtailName] = logtail;
+
+                let missileTrack = logtailContent.find(".missile-track.available");
+                endpoint.viewer.missileTracks[logtailName] = (missileTrack.length > 0 ? missileTrack : null);
+
+                let indicator1 = $(".endpoints.tabs .tabs-title.available .indicator").eq(endpointIndex);
+                let indicator2 = $(".logtails.tabs .tabs-title.available .indicator").eq(logtailIndex);
+                endpoint.viewer.indicators[logtailName] = [indicator1, indicator2];
+
+                logtail.data("tailing", true);
+                logtailContent.find(".tailing-status").addClass("active");
+            });
+        }
+        function establishCompleted() {
+            if (endpointIndex < endpoints.length - 1) {
+                establishEndpoint(++endpointIndex);
+            } else {
+                initializeTabs();
+            }
+        }
+        let logViewer = new LogtailViewer(endpoints[endpointIndex], endpointEstablished, establishCompleted);
         try {
             logViewer.openSocket();
         } catch (e) {
             logViewer.printErrorMessage("Socket connection failed");
-        }
-        logViewers.push(logViewer);
-    }
-
-    function endpointEstablished(endpoint, tailers) {
-        let endpointContent = drawLogtailsTabs(endpoint, tailers);
-        let logtails = [];
-        endpointContent.find(".logtail-content.available").each(function() {
-            let name = $(this).data("name");
-            logtails[name] = $(this).find(".logtail");
-        });
-        return logtails;
-    }
-
-    function establishCompleted() {
-        if (endpointIndex < endpoints.length - 1) {
-            establishEndpoint(++endpointIndex);
-        } else {
-            initializeTabs();
         }
     }
 
@@ -79,7 +85,6 @@
             let endpointContent = $(".endpoint-content.available").eq(index);
             endpointContent.find(".logtails.tabs .tabs-title.available").removeClass("is-active").eq(0).addClass("is-active");
             endpointContent.find(".logtail-content.available").hide().eq(0).show();
-            //$(".endpoint").text($(this).data("endpoint"));
         });
         $(".endpoints.tabs .tabs-title.available a").click(function() {
             $(".endpoints.tabs .tabs-title").removeClass("is-active");
@@ -87,7 +92,7 @@
             let index = tab.data("index");
             tab.addClass("is-active");
             $(".endpoint-content.available").hide().eq(index).show();
-            logViewers[index].refresh();
+            endpoints[index].viewer.refresh();
         });
         $(".logtails.tabs .tabs-title.available a").click(function() {
             let endpointContent = $(this).closest(".endpoint-content");
@@ -98,7 +103,20 @@
             logtailTab.addClass("is-active");
             let logtailContent = endpointContent.find(".logtail-content.available").hide().eq(logtailIndex).show();
             let logtail = logtailContent.find(".logtail");
-            logViewers[endpointIndex].refresh(logtail);
+            endpoints[endpointIndex].viewer[endpointIndex].refresh(logtail);
+        });
+        $(".logtail-content .tailing-switch").click(function () {
+            let logtail = $(this).closest(".logtail-content").find(".logtail");
+            let endpointIndex = logtail.data("endpoint-index");
+            let endpoint = endpoints[endpointIndex];
+            if (logtail.data("tailing")) {
+                logtail.data("tailing", false);
+                $(this).find(".tailing-status").removeClass("active");
+            } else {
+                logtail.data("tailing", true);
+                $(this).find(".tailing-status").addClass("active");
+                endpoint.viewer.scrollToBottom(logtail);
+            }
         });
     }
 
@@ -152,8 +170,9 @@
         content.insertAfter($(".logtail-content").last());
         if (tailer.visualizer) {
             content.find(".missile-track")
-                .addClass("available").show()
-                .data("launcher", tailer.visualizer);
+                .addClass("available")
+                .data("launcher", tailer.visualizer)
+                .show();
         }
         return content.show();
     }

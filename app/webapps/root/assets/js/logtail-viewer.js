@@ -4,13 +4,13 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     this.establishCompleted = establishCompleted;
     this.socket = null;
     this.heartbeatTimer = null;
-    this.established = false;
-    this.logtails = null;
     this.pendingMessages = [];
+    this.logtails = {};
     this.missileTracks = {};
     this.indicators = {};
+    this.established = false;
 
-    this.openSocket = function() {
+    this.openSocket = function () {
         if (this.socket) {
             this.socket.close();
         }
@@ -53,42 +53,23 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         this.socket.onerror = function (event) {
             console.error("WebSocket error observed:", event);
             self.printErrorMessage('Could not connect to WebSocket server');
-            self.switchTailing(false, false);
             setTimeout(function () {
                 self.openSocket();
             }, 60000);
         };
     };
 
-    this.closeSocket = function() {
+    this.closeSocket = function () {
         if (this.socket) {
             this.socket.close();
             this.socket = null;
         }
     };
 
-    this.establish = function(tailers) {
+    this.establish = function (tailers) {
+        this.endpoint['viewer'] = this;
         if (this.endpointEstablished) {
-            this.logtails = this.endpointEstablished(this.endpoint, tailers);
-            for (let key in this.logtails) {
-                let logtail = this.logtails[key];
-                let logtailName = logtail.data("logtail-name");
-                let logtailContent = logtail.closest(".logtail-content");
-
-                let self = this;
-                logtailContent.find(".bite-tail").click(function () {
-                    self.switchTailing(logtailName);
-                }).click();
-
-                let missileTrack = logtailContent.find(".missile-track.available");
-                this.missileTracks[logtailName] = (missileTrack.length > 0 ? missileTrack : null);
-
-                let endpointIndex = logtail.data("endpoint-index");
-                let logtailIndex = logtail.data("logtail-index");
-                let indicator1 = $(".endpoints.tabs .tabs-title.available .indicator").eq(endpointIndex);
-                let indicator2 = $(".logtails.tabs .tabs-title.available .indicator").eq(logtailIndex);
-                this.indicators[logtailName] = [indicator1, indicator2];
-            }
+            this.endpointEstablished(this.endpoint, tailers);
         }
         if (this.establishCompleted) {
             this.establishCompleted();
@@ -102,7 +83,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         this.established = true;
     };
 
-    this.heartbeatPing = function() {
+    this.heartbeatPing = function () {
         if (this.heartbeatTimer) {
             clearTimeout(this.heartbeatTimer);
         }
@@ -116,7 +97,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }, 57000);
     };
 
-    this.getLogtail = function(logtailName) {
+    this.getLogtail = function (logtailName) {
         if (this.logtails && logtailName) {
             return this.logtails[logtailName];
         } else {
@@ -124,22 +105,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.switchTailing = function(logtailName, status) {
-        let logtail = this.getLogtail(logtailName);
-        if (status !== true && status !== false) {
-            status = !logtail.data("tailing");
-        }
-        if (status) {
-            logtail.data("tailing", true);
-            logtail.closest(".logtail-content").find(".tail-status").addClass("active");
-            this.scrollToBottom(logtail);
-        } else {
-            logtail.data("tailing", false);
-            logtail.closest(".logtail-content").find(".tail-status").removeClass("active");
-        }
-    };
-
-    this.scrollToBottom = function(logtail) {
+    this.scrollToBottom = function (logtail) {
         if (logtail.data("tailing")) {
             let timer = logtail.data("timer");
             if (timer) {
@@ -155,7 +121,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.refresh = function(logtail) {
+    this.refresh = function (logtail) {
         if (logtail) {
             this.scrollToBottom(logtail);
         } else {
@@ -165,7 +131,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printMessage = function(logtailName, text) {
+    this.printMessage = function (logtailName, text) {
         this.indicate(logtailName);
         this.visualize(logtailName, text);
         let logtail = this.getLogtail(logtailName);
@@ -173,7 +139,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         this.scrollToBottom(logtail);
     };
 
-    this.printEventMessage = function(text, logtailName) {
+    this.printEventMessage = function (text, logtailName) {
         if (logtailName) {
             let logtail = this.getLogtail(logtailName);
             $("<p/>").addClass("event ellipses").html(text).appendTo(logtail);
@@ -185,7 +151,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printErrorMessage = function(text, logtailName) {
+    this.printErrorMessage = function (text, logtailName) {
         if (logtailName) {
             let logtail = this.getLogtail(logtailName);
             $("<p/>").addClass("event error").html(text).appendTo(logtail);
@@ -197,7 +163,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.indicate = function(logtailName) {
+    this.indicate = function (logtailName) {
         let indicators = this.indicators[logtailName];
         if (indicators) {
             for (let key in indicators) {
@@ -212,7 +178,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.visualize = function(logtailName, text) {
+    this.visualize = function (logtailName, text) {
         let missileTrack = this.missileTracks[logtailName];
         if (missileTrack) {
             let self = this;
@@ -231,7 +197,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     const pattern2 = /^Session ([\w\.]+) deleted in session data store/i;
     const pattern3 = /^Session ([\w\.]+) accessed, stopping timer, active requests=(\d+)/i;
     const pattern4 = /^Creating new session id=([\w\.]+)/i;
-    this.missileLaunch1 = function(missileTrack, text) {
+    this.missileLaunch1 = function (missileTrack, text) {
         let idx = text.indexOf("] ");
         if (idx !== -1) {
             text = text.substring(idx + 2);
