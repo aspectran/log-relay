@@ -117,7 +117,7 @@
                         </c:if>
                     </header>
                     <dl class="endpoints tabs">
-                        <dd class="tabs-title"><a><span class="bullet icon-globe"></span> <span class="title"> </span> <span class="indicator fi-loop"></span></a></dd>
+                        <dd class="tabs-title"><a><span class="bullet fi-thumbnails"></span> <span class="title"> </span> <span class="indicator fi-loop"></span></a></dd>
                     </dl>
                 </div>
             </div>

@@ -201,7 +201,7 @@
         let content = endpointContent.find(".logtail-content").eq(0).hide().clone();
         content.addClass("available");
         content.data("index", index).data("name", tailer.name);
-        content.find(".status-bar h4").text("( " + endpointName + " )  " + tailer.file);
+        content.find(".status-bar h4").text(endpointName + " >> " + tailer.file);
         content.find(".logtail")
             .data("endpoint-index", endpointIndex).data("endpoint-name", endpointName)
             .data("logtail-index", index).data("logtail-name", tailer.name);
