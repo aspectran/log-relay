@@ -10,7 +10,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     this.indicators = {};
     this.established = false;
 
-    this.openSocket = function () {
+    this.openSocket = function() {
         if (this.socket) {
             this.socket.close();
         }
@@ -19,12 +19,12 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         url.protocol = url.protocol.replace('http:', 'ws:');
         this.socket = new WebSocket(url.href);
         let self = this;
-        this.socket.onopen = function (event) {
+        this.socket.onopen = function(event) {
             self.pendingMessages.push("Socket connection successful");
             self.socket.send("JOIN:");
             self.heartbeatPing();
         };
-        this.socket.onmessage = function (event) {
+        this.socket.onmessage = function(event) {
             if (typeof event.data === "string") {
                 if (event.data === "--heartbeat-pong--") {
                     self.heartbeatPing();
@@ -46,27 +46,27 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
                 }
             }
         };
-        this.socket.onclose = function (event) {
+        this.socket.onclose = function(event) {
             self.printEventMessage('Socket connection closed. Please refresh this page to try again!');
             self.closeSocket();
         };
-        this.socket.onerror = function (event) {
+        this.socket.onerror = function(event) {
             console.error("WebSocket error observed:", event);
             self.printErrorMessage('Could not connect to WebSocket server');
-            setTimeout(function () {
+            setTimeout(function() {
                 self.openSocket();
             }, 60000);
         };
     };
 
-    this.closeSocket = function () {
+    this.closeSocket = function() {
         if (this.socket) {
             this.socket.close();
             this.socket = null;
         }
     };
 
-    this.establish = function (tailers) {
+    this.establish = function(tailers) {
         this.endpoint['viewer'] = this;
         if (this.endpointEstablished) {
             this.endpointEstablished(this.endpoint, tailers);
@@ -83,12 +83,12 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         this.established = true;
     };
 
-    this.heartbeatPing = function () {
+    this.heartbeatPing = function() {
         if (this.heartbeatTimer) {
             clearTimeout(this.heartbeatTimer);
         }
         let self = this;
-        this.heartbeatTimer = setTimeout(function () {
+        this.heartbeatTimer = setTimeout(function() {
             if (self.socket) {
                 self.socket.send("--heartbeat-ping--");
                 self.heartbeatTimer = null;
@@ -97,7 +97,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }, 57000);
     };
 
-    this.getLogtail = function (logtailName) {
+    this.getLogtail = function(logtailName) {
         if (this.logtails && logtailName) {
             return this.logtails[logtailName];
         } else {
@@ -105,13 +105,13 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.scrollToBottom = function (logtail) {
+    this.scrollToBottom = function(logtail) {
         if (logtail.data("tailing")) {
             let timer = logtail.data("timer");
             if (timer) {
                 clearTimeout(timer);
             }
-            timer = setTimeout(function () {
+            timer = setTimeout(function() {
                 logtail.scrollTop(logtail.prop("scrollHeight"));
                 if (logtail.find("p").length > 11000) {
                     logtail.find("p:gt(10000)").remove();
@@ -121,7 +121,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.refresh = function (logtail) {
+    this.refresh = function(logtail) {
         if (logtail) {
             this.scrollToBottom(logtail);
         } else {
@@ -131,15 +131,23 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printMessage = function (logtailName, text) {
-        this.indicate(logtailName);
-        this.visualize(logtailName, text);
-        let logtail = this.getLogtail(logtailName);
-        $("<p/>").text(text).appendTo(logtail);
-        this.scrollToBottom(logtail);
+    this.clear = function(logtail) {
+        if (logtail) {
+            logtail.empty();
+        }
     };
 
-    this.printEventMessage = function (text, logtailName) {
+    this.printMessage = function(logtailName, text) {
+        this.indicate(logtailName);
+        let logtail = this.getLogtail(logtailName);
+        if (!logtail.data("pause")) {
+            this.visualize(logtailName, text);
+            $("<p/>").text(text).appendTo(logtail);
+            this.scrollToBottom(logtail);
+        }
+    };
+
+    this.printEventMessage = function(text, logtailName) {
         if (logtailName) {
             let logtail = this.getLogtail(logtailName);
             $("<p/>").addClass("event ellipses").html(text).appendTo(logtail);
@@ -151,7 +159,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printErrorMessage = function (text, logtailName) {
+    this.printErrorMessage = function(text, logtailName) {
         if (logtailName) {
             let logtail = this.getLogtail(logtailName);
             $("<p/>").addClass("event error").html(text).appendTo(logtail);
@@ -163,14 +171,14 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.indicate = function (logtailName) {
+    this.indicate = function(logtailName) {
         let indicators = this.indicators[logtailName];
         if (indicators) {
             for (let key in indicators) {
                 let indicator = indicators[key];
                 if (!indicator.hasClass("on")) {
                     indicator.addClass("blink on");
-                    setTimeout(function () {
+                    setTimeout(function() {
                         indicator.removeClass("blink on");
                     }, 500);
                 }
@@ -178,11 +186,11 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.visualize = function (logtailName, text) {
+    this.visualize = function(logtailName, text) {
         let missileTrack = this.missileTracks[logtailName];
         if (missileTrack) {
             let self = this;
-            setTimeout(function () {
+            setTimeout(function() {
                 let launcher = missileTrack.data("launcher");
                 let launchMissile = self[launcher];
                 if (launchMissile) {
@@ -197,7 +205,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     const pattern2 = /^Session ([\w\.]+) deleted in session data store/i;
     const pattern3 = /^Session ([\w\.]+) accessed, stopping timer, active requests=(\d+)/i;
     const pattern4 = /^Creating new session id=([\w\.]+)/i;
-    this.missileLaunch1 = function (missileTrack, text) {
+    this.missileLaunch1 = function(missileTrack, text) {
         let idx = text.indexOf("] ");
         if (idx !== -1) {
             text = text.substring(idx + 2);
@@ -219,7 +227,7 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
                 } else if (mis.hasClass("mis-3")) {
                     dur += 500;
                 }
-                setTimeout(function () {
+                setTimeout(function() {
                     mis.remove();
                 }, dur);
             }

@@ -1,48 +1,46 @@
 .logtail-content {
     background-color: #222;
 }
-.logtail-content .status {
+.logtail-content .status-bar {
     background-color: #677278;
     color: #eee;
     overflow: auto;
-    padding : 0 10px;
+    padding : 0 7px 0 10px;
+    height: 29px;
 }
-.logtail-content .status h4 {
+.logtail-content .status-bar h4 {
     float: left;
-    width: 88%;
-    height: 27px;
-    line-height: 27px;
+    width: 70%;
+    height: 29px;
+    line-height: 29px;
     font-size: .9em;
     font-weight: normal;
-}
-.logtail-content .status ul.tabs {
-    float: left;
-    margin: 4px 0 0 0;
-}
-.logtail-content .status ul.tabs li {
-    float: left;
-    padding: 9px 20px;
     margin: 0;
-    font-size: 14px;
-    box-sizing: border-box;
-    color: #555;
-    background-color: #e0e0e0;
-    cursor: pointer;
-    transition: .3s;
 }
-.logtail-content .status .tailing-switch {
+.logtail-content .status-bar a {
     float: right;
+    line-height: 29px;
+    margin-left: 10px;
+    color: #fff;
+}
+.logtail-content .status-bar a:hover {
+    color: #39aa56;
+}
+.logtail-content .status-bar a.on {
+    color: #39aa56;
+}
+.logtail-content .status-bar .tailing-switch {
     line-height: 26px;
 }
-.logtail-content .status .tailing-switch .tailing-status {
+.logtail-content .status-bar .tailing-switch .tailing-status {
     display: inline-block;
     height: 20px;
     width: 20px;
     vertical-align: middle;
-    border-radius: 50%;
+    border-radius: 35%;
     position: relative;
 }
-.logtail-content .status .tailing-switch .tailing-status::after {
+.logtail-content .status-bar .tailing-switch .tailing-status::after {
     content: "";
     position: absolute;
     top: 0;
@@ -56,7 +54,7 @@
     background: #f1f1f1;
     border-radius: 50%;
 }
-.logtail-content .status .tailing-switch .tailing-status.active {
+.logtail-content .status-bar .tailing-switch .tailing-status.on {
     background-color: #39aa56;
 }
 .logtail-content .logtail {

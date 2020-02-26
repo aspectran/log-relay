@@ -5,10 +5,16 @@
         <dd class="tabs-title"><a><span class="bullet fi-list-bullet"></span> <span class="title"> </span> <span class="indicator fi-loop"></span></a></dd>
     </dl>
     <div class="logtail-content">
-        <div class="status">
+        <div class="status-bar">
             <h4 class="ellipses"></h4>
             <a href="#" class="tailing-switch" title="Scroll to End of Log">
                 <span class="tailing-status"></span>
+            </a>
+            <a href="#" class="clear-screen" title="Clear screen">
+                <span class="icon fi-x"></span>
+            </a>
+            <a href="#" class="pause-switch" title="Pause log output">
+                <span class="icon fi-pause"></span>
             </a>
         </div>
         <div class="missile-track" style="display: none">
@@ -59,7 +65,7 @@
                 endpoint.viewer.indicators[logtailName] = [indicator1, indicator2];
 
                 logtail.data("tailing", true);
-                logtailContent.find(".tailing-status").addClass("active");
+                logtailContent.find(".tailing-status").addClass("on");
             });
         }
         function establishCompleted() {
@@ -81,42 +87,74 @@
         $(".endpoints.tabs .tabs-title.available").removeClass("is-active").eq(0).addClass("is-active");
         $(".endpoint-content.available").hide().eq(0).show();
         $(".endpoints.tabs .tabs-title.available").each(function() {
-            let index = $(this).data("index");
-            let endpointContent = $(".endpoint-content.available").eq(index);
+            let endpointIndex = $(this).data("index");
+            let endpointContent = $(".endpoint-content.available").eq(endpointIndex);
             endpointContent.find(".logtails.tabs .tabs-title.available").removeClass("is-active").eq(0).addClass("is-active");
             endpointContent.find(".logtail-content.available").hide().eq(0).show();
         });
         $(".endpoints.tabs .tabs-title.available a").click(function() {
             $(".endpoints.tabs .tabs-title").removeClass("is-active");
             let tab = $(this).closest(".tabs-title");
-            let index = tab.data("index");
+            let endpointIndex = tab.data("index");
             tab.addClass("is-active");
-            $(".endpoint-content.available").hide().eq(index).show();
-            endpoints[index].viewer.refresh();
+            $(".endpoint-content.available").hide().eq(endpointIndex).show();
+            let logtails = endpoints[endpointIndex].viewer.logtails;
+            for (let key in logtails) {
+                let logtail = logtails[key];
+                if (!logtail.data("pause")) {
+                    endpoints[endpointIndex].viewer.refresh(logtail);
+                }
+            }
         });
         $(".logtails.tabs .tabs-title.available a").click(function() {
             let endpointContent = $(this).closest(".endpoint-content");
             let endpointIndex = endpointContent.data("index");
             let logtailTab = $(this).closest(".tabs-title");
             let logtailIndex = logtailTab.data("index");
-            endpointContent.find(".logtails.tabs .tabs-title").removeClass("is-active");
-            logtailTab.addClass("is-active");
-            let logtailContent = endpointContent.find(".logtail-content.available").hide().eq(logtailIndex).show();
-            let logtail = logtailContent.find(".logtail");
-            endpoints[endpointIndex].viewer[endpointIndex].refresh(logtail);
+            if (!logtailTab.hasClass("is-active")) {
+                endpointContent.find(".logtails.tabs .tabs-title").removeClass("is-active");
+                logtailTab.addClass("is-active");
+                let logtailContent = endpointContent.find(".logtail-content.available").hide().eq(logtailIndex).show();
+                let logtail = logtailContent.find(".logtail");
+                if (!logtail.data("pause")) {
+                    endpoints[endpointIndex].viewer.refresh(logtail);
+                }
+            }
         });
-        $(".logtail-content .tailing-switch").click(function () {
+        $(".logtails.tabs .tabs-title.available a").dblclick(function(event) {
+            let endpointContent = $(this).closest(".endpoint-content");
+            endpointContent.find(".logtails.tabs .tabs-title").removeClass("is-active");
+            $(this).click();
+            event.preventDefault();
+        });
+        $(".logtail-content .tailing-switch").click(function() {
             let logtail = $(this).closest(".logtail-content").find(".logtail");
             let endpointIndex = logtail.data("endpoint-index");
             let endpoint = endpoints[endpointIndex];
             if (logtail.data("tailing")) {
                 logtail.data("tailing", false);
-                $(this).find(".tailing-status").removeClass("active");
+                $(this).find(".tailing-status").removeClass("on");
             } else {
                 logtail.data("tailing", true);
-                $(this).find(".tailing-status").addClass("active");
+                $(this).find(".tailing-status").addClass("on");
                 endpoint.viewer.scrollToBottom(logtail);
             }
+        });
+        $(".logtail-content .pause-switch").click(function() {
+            let logtail = $(this).closest(".logtail-content").find(".logtail");
+            if (logtail.data("pause")) {
+                logtail.data("pause", false);
+                $(this).removeClass("on");
+            } else {
+                logtail.data("pause", true);
+                $(this).addClass("on");
+            }
+        });
+        $(".logtail-content .clear-screen").click(function() {
+            let logtail = $(this).closest(".logtail-content").find(".logtail");
+            let endpointIndex = logtail.data("endpoint-index");
+            let endpoint = endpoints[endpointIndex];
+            endpoint.viewer.clear(logtail);
         });
     }
 
@@ -163,7 +201,7 @@
         let content = endpointContent.find(".logtail-content").eq(0).hide().clone();
         content.addClass("available");
         content.data("index", index).data("name", tailer.name);
-        content.find(".status h4").text("( " + endpointName + " )  " + tailer.file);
+        content.find(".status-bar h4").text("( " + endpointName + " )  " + tailer.file);
         content.find(".logtail")
             .data("endpoint-index", endpointIndex).data("endpoint-name", endpointName)
             .data("logtail-index", index).data("logtail-name", tailer.name);
