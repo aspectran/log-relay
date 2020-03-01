@@ -4,8 +4,9 @@
     <div class="cell options">
         <ul class="layout-options">
             <li class="fi-layout tabbed on"><a> Tabbed layout</a></li>
-            <li class="fi-layout tiled" data-columns="2"><a> 2-column layout</a></li>
-            <li class="fi-layout tiled" data-columns="3"><a> 3-column layout</a></li>
+            <li class="fi-layout tiled hide-for-small-only" data-columns="2"><a> 2-column layout</a></li>
+            <li class="fi-layout tiled hide-for-small-only" data-columns="3"><a> 3-column layout</a></li>
+            <li class="fi-layout stacked show-for-small-only" data-columns="1"><a> Stacked layout</a></li>
         </ul>
     </div>
     <dl class="cell logtails tabs b0">
@@ -175,6 +176,10 @@
             let logtailContent = endpointContent.find(".logtail-content");
             let columns = $(this).parent().data("columns");
             switch (columns) {
+                case 1:
+                    endpointContent.addClass("tiled");
+                    logtailContent.removeClass("large-3 large-4 large-6");
+                    break;
                 case 2:
                     endpointContent.addClass("tiled");
                     logtailContent.removeClass("large-3 large-4 large-6").addClass("large-6");
