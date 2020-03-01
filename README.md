@@ -1,7 +1,7 @@
 Log Relayer
 ===================
 
-A web application that tails log files and relays the results in real time to the log viewer via the websocket endpoint.
+Log Relayer can send the latest logs recorded on the server to the web browser through the web socket endpoint and provides an integrated view to observe the logs of several servers in real time.
 
 ## Running Aspectow
 
