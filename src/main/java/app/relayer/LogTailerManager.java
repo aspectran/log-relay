@@ -19,6 +19,7 @@ import javax.websocket.Session;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class LogTailerManager {
 
     private static final String TAILERS_PROPERTY = "tailers";
 
-    private final Map<String, LogTailer> tailers = new HashMap<>();
+    private final Map<String, LogTailer> tailers = new LinkedHashMap<>();
 
     private final LogtailEndpoint endpoint;
 

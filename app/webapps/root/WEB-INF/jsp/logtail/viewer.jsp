@@ -1,10 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<div class="endpoint-content">
-    <dl class="logtails tabs b0">
+<div class="grid-x endpoint-content">
+    <div class="cell options">
+        <ul class="layout-options">
+            <li class="fi-layout tabbed on"><a> Tabbed layout</a></li>
+            <li class="fi-layout tiled" data-columns="2"><a> 2-column layout</a></li>
+            <li class="fi-layout tiled" data-columns="3"><a> 3-column layout</a></li>
+        </ul>
+    </div>
+    <dl class="cell logtails tabs b0">
         <dd class="tabs-title"><a><span class="bullet fi-list-bullet"></span> <span class="title"> </span> <span class="indicator fi-loop"></span></a></dd>
     </dl>
-    <div class="logtail-content">
+    <div class="cell logtail-content">
         <div class="status-bar">
             <h4 class="ellipses"></h4>
             <a href="#" class="tailing-switch" title="Scroll to End of Log">
@@ -29,6 +36,7 @@
     const endpoints = [];
 
     $(function() {
+        const endpoint = "${page.endpoint}";
         $.ajax({
             url: "/endpoints/${page.token}",
             type: 'get',
@@ -36,7 +44,9 @@
             success: function(data) {
                 if (data) {
                     for (let key in data) {
-                        endpoints.push(data[key]);
+                        if (!endpoint || endpoint === data[key].name) {
+                            endpoints.push(data[key]);
+                        }
                     }
                     for (let index = 0; index < endpoints.length; index++) {
                         establishEndpoint(index);
@@ -62,7 +72,8 @@
 
                 let indicator1 = $(".endpoints.tabs .tabs-title.available .indicator").eq(endpointIndex);
                 let indicator2 = $(".logtails.tabs .tabs-title.available .indicator").eq(logtailIndex);
-                endpoint.viewer.indicators[logtailName] = [indicator1, indicator2];
+                let indicator3 = logtailContent.find(".status-bar");
+                endpoint.viewer.indicators[logtailName] = [indicator1, indicator2, indicator3];
 
                 logtail.data("tailing", true);
                 logtailContent.find(".tailing-status").addClass("on");
@@ -156,6 +167,28 @@
             let endpoint = endpoints[endpointIndex];
             endpoint.viewer.clear(logtail);
         });
+
+        $(".layout-options li a").click(function() {
+            $(".layout-options li").removeClass("on");
+            $(this).parent().addClass("on");
+            let endpointContent = $(this).closest(".endpoint-content");
+            let logtailContent = endpointContent.find(".logtail-content");
+            let columns = $(this).parent().data("columns");
+            switch (columns) {
+                case 2:
+                    endpointContent.addClass("tiled");
+                    logtailContent.removeClass("large-3 large-4 large-6").addClass("large-6");
+                    break;
+                case 3:
+                    endpointContent.addClass("tiled");
+                    logtailContent.removeClass("large-3 large-4 large-6").addClass("large-4");
+                    break;
+                default:
+                    endpointContent.removeClass("tiled");
+                    logtailContent.removeClass("large-3 large-4 large-6");
+                    break;
+            }
+        });
     }
 
     function drawLogtailsTabs(endpoint, tailers) {
@@ -174,39 +207,42 @@
         let tab = tab0.hide().clone();
         tab.addClass("available");
         tab.data("index", index);
+        tab.data("name", endpoint.name);
+        tab.data("title", endpoint.title);
         tab.data("endpoint", endpoint.url);
         let a = tab.find("a");
-        a.find(".title").text(" " + endpoint.name + " ");
+        a.find(".title").text(" " + endpoint.title + " ");
         tab.show().appendTo(tabs);
         let content = $(".endpoint-content").eq(0).hide().clone();
         content.addClass("available");
-        content.data("index", index).data("name", endpoint.name);
+        content.data("index", index).data("name", endpoint.name).data("title", endpoint.title);
         content.insertAfter($(".endpoint-content").last());
         return content;
     }
 
     function addLogtailsTab(endpointContent, tailer) {
         let endpointIndex = endpointContent.data("index");
-        let endpointName = endpointContent.data("name");
+        let endpointTitle = endpointContent.data("title");
         let tabs = endpointContent.find(".logtails.tabs");
         let tab0 = tabs.find(".tabs-title").eq(0);
         let index = tabs.find(".tabs-title").length - 1;
         let tab = tab0.hide().clone();
         tab.addClass("available");
         tab.data("index", index);
-        tab.attr("title", endpointName + " :: " + tailer.name);
+        tab.attr("title", endpointTitle + " ›› " + tailer.name);
         let a = tab.find("a");
         a.find(".title").text(" " + tailer.name + " ");
         tab.show().appendTo(tabs);
         let content = endpointContent.find(".logtail-content").eq(0).hide().clone();
         content.addClass("available");
         content.data("index", index).data("name", tailer.name);
-        content.find(".status-bar h4").text(endpointName + " >> " + tailer.file);
+        content.find(".status-bar h4").text(endpointTitle + " ›› " + tailer.file);
         content.find(".logtail")
-            .data("endpoint-index", endpointIndex).data("endpoint-name", endpointName)
+            .data("endpoint-index", endpointIndex).data("endpoint-name", endpointTitle)
             .data("logtail-index", index).data("logtail-name", tailer.name);
         content.insertAfter($(".logtail-content").last());
         if (tailer.visualizer) {
+            content.addClass("with-track");
             content.find(".missile-track")
                 .addClass("available")
                 .data("launcher", tailer.visualizer)

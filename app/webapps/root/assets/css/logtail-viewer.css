@@ -1,12 +1,42 @@
-.logtail-content {
-    background-color: #222;
+.options {
+    margin-top: -15px;
+    padding: 10px 0;
+    font-size: 90%;
+    text-align: right;
 }
+ul.layout-options {
+    float: right;
+    list-style-type: none;
+    margin: 0;
+}
+ul.layout-options li {
+    float: left;
+    margin-left: .3em;
+    border: 1px solid #ccc;
+    padding: 0 .5em;
+    border-radius: 5px;
+    color: #777;
+}
+ul.layout-options li a {
+    color: #777;
+}
+ul.layout-options li.on {
+    background-color: #748fa0;
+    color: #fff;
+}
+ul.layout-options li.on a {
+    color: #fff;
+}
+
 .logtail-content .status-bar {
     background-color: #677278;
     color: #eee;
     overflow: auto;
     padding : 0 7px 0 10px;
     height: 29px;
+}
+.logtail-content .status-bar.on {
+    background-color: #709185;
 }
 .logtail-content .status-bar h4 {
     float: left;
@@ -24,10 +54,10 @@
     color: #fff;
 }
 .logtail-content .status-bar a:hover {
-    color: #39aa56;
+    color: red;
 }
 .logtail-content .status-bar a.on {
-    color: #39aa56;
+    color: #980000;
 }
 .logtail-content .status-bar .tailing-switch {
     line-height: 26px;
@@ -62,10 +92,14 @@
     margin: 0;
     padding: 10px;
     overflow: auto;
-    height: 500px;
+    height: 640px;
     color: #f1f1f1;
-    background: transparent;
+    background-color: #222;
     border: none;
+    border-radius: 0;
+}
+.logtail-content.with-track .logtail {
+    height: 520px;
 }
 .logtail-content .logtail p {
     font-size: 12px;
@@ -90,6 +124,20 @@
     color: yellow;
 }
 
+.tiled .tabs {
+    display: none;
+}
+.tiled .logtail-content.available {
+    display: block !important;
+    padding: 1px;
+}
+.tiled .logtail-content .logtail {
+    height: 580px;
+}
+.tiled .logtail-content.with-track .logtail {
+    height: 460px;
+}
+
 @keyframes missileAnimation {
     from {
         left: 0;
@@ -101,7 +149,6 @@
 .missile-track {
     position: relative;
     height: 120px;
-    margin-bottom: 4px;
     background-color: #0d1939;
     overflow: hidden;
 }

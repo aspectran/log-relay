@@ -29,14 +29,17 @@ public class LogtailViewer {
 
     private static final String ENDPOINT_CONFIG_FILE = "/config/endpoint-config.apon";
 
-    @Request("/")
+    @Request("/${endpoint}")
     @Dispatch("templates/frame")
     @Action("page")
-    public Map<String, String> viewer() {
+    public Map<String, String> viewer(String endpoint) {
         Map<String, String> map = new HashMap<>();
         map.put("include", "logtail/viewer");
-        map.put("style", "fluid plate compact");
+        map.put("style", "fluid compact");
         map.put("token", TimeLimitedPBTokenIssuer.getToken());
+        if (endpoint != null) {
+            map.put("endpoint", endpoint);
+        }
         return map;
     }
 

@@ -150,13 +150,32 @@
     </div>
 </div>
 <footer id="footer-content">
+    <div id="footer">
+        <div class="grid-container ${page.style}">
+            <div class="grid-x grid-padding-x">
+                <div class="medium-2 large-1 cell hide-for-small-only t5">
+                    <h5><a class="logo" title="Aspectran"><img src="https://aspectran.com/assets/img/aspectran-site-logo.png" width="90" height="90" alt="Aspectran" title="Aspectran"/></a></h5>
+                </div>
+                <div class="medium-4 large-4 cell">
+                    <h5>Log Relayer</h5>
+                    <p>Log Relayer는 서버에 기록되는 최신 로그들을 웹 소켓 엔드 포인트를 통해 웹 브라우저로 보낼 수 있으며, 실시간으로 여러 서버의 로그들을 관찰할 수 있는 통합뷰를 제공합니다.</p>
+                </div>
+                <div class="small-6 medium-3 large-3 large-offset-1 cell">
+                    <h5>Get Involved</h5>
+                    <ul class="no-bullet">
+                        <li class="icon-github"> <a href="https://github.com/aspectran/log-relayer" target="_blank" title="" class="external">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="small-6 medium-3 large-3 cell">
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="subfooter">
-        <div class="grid-container">
+        <div class="grid-container ${page.style}">
             <nav class="grid-x b30">
-                <section id="subfooter-left" class="medium-6 cell credits">
+                <section class="medium-offset-2 large-offset-1 cell credits">
                     <p>Copyright © 2008-2020 The Aspectran Project</p>
-                </section>
-                <section id="subfooter-right" class="medium-6 cell social-icons">
                 </section>
             </nav>
         </div>
