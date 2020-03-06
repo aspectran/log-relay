@@ -173,9 +173,9 @@
     </div>
     <div id="subfooter">
         <div class="grid-container ${page.style}">
-            <nav class="grid-x b30">
-                <section class="medium-offset-2 large-offset-1 cell credits">
-                    <p>Copyright © 2008-2020 The Aspectran Project</p>
+            <nav class="grid-x">
+                <section class="medium-10 medium-offset-2 large-11 large-offset-1 cell">
+                    <p class="credits">Copyright © 2008-2020 The Aspectran Project</p>
                 </section>
             </nav>
         </div>

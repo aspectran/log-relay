@@ -175,11 +175,11 @@
     </div>
     <div id="subfooter">
         <div class="grid-container">
-            <nav class="grid-x b30">
-                <section id="subfooter-left" class="medium-6 cell credits">
-                    <p>Copyright © 2008-2020 The Aspectran Project</p>
+            <nav class="grid-x">
+                <section id="subfooter-left" class="medium-6 cell">
+                    <p class="credits">Copyright © 2008-2020 The Aspectran Project</p>
                 </section>
-                <section id="subfooter-right" class="medium-6 cell social-icons">
+                <section id="subfooter-right" class="medium-6 cell">
                 </section>
             </nav>
         </div>
