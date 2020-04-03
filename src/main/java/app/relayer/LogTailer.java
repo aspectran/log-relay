@@ -16,10 +16,8 @@
 package app.relayer;
 
 import com.aspectran.core.util.lifecycle.AbstractLifeCycle;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.io.input.Tailer;
-import org.apache.commons.io.input.TailerListener;
 
 import java.io.File;
 import java.io.IOException;

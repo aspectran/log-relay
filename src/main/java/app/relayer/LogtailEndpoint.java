@@ -19,10 +19,9 @@ import com.aspectran.core.component.bean.ablility.InitializableBean;
 import com.aspectran.core.component.bean.annotation.AvoidAdvice;
 import com.aspectran.core.component.bean.annotation.Component;
 import com.aspectran.core.util.StringUtils;
-import com.aspectran.core.util.apon.AponReader;
 import com.aspectran.core.util.json.JsonWriter;
-import com.aspectran.core.util.logging.Log;
-import com.aspectran.core.util.logging.LogFactory;
+import com.aspectran.core.util.logging.Logger;
+import com.aspectran.core.util.logging.LoggerFactory;
 import com.aspectran.core.util.security.InvalidPBTokenException;
 import com.aspectran.core.util.security.TimeLimitedPBTokenIssuer;
 import com.aspectran.web.socket.jsr356.ActivityContextAwareEndpoint;
@@ -51,7 +50,7 @@ import java.util.Set;
 @AvoidAdvice
 public class LogtailEndpoint extends ActivityContextAwareEndpoint implements InitializableBean {
 
-    private static final Log log = LogFactory.getLog(LogtailEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogtailEndpoint.class);
 
     private static final String LOGTAILER_CONFIG_FILE = "/config/logtailer-config.apon";
 
@@ -81,13 +80,13 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint implements Ini
         try {
             TimeLimitedPBTokenIssuer.validate(token);
         } catch (InvalidPBTokenException e) {
-            log.error("Invalid token: " + token);
+            logger.error("Invalid token: " + token);
             String reason = "Invalid token";
             session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, reason));
             throw new IOException(reason, e);
         }
-        if (log.isDebugEnabled()) {
-            log.debug("WebSocket connection established with token: " + token);
+        if (logger.isDebugEnabled()) {
+            logger.debug("WebSocket connection established with token: " + token);
         }
     }
 
@@ -111,7 +110,7 @@ public class LogtailEndpoint extends ActivityContextAwareEndpoint implements Ini
 
     @OnError
     public void onError(Session session, Throwable error) {
-        log.error("Error in websocket session: " + session.getId(), error);
+        logger.error("Error in websocket session: " + session.getId(), error);
         try {
             removeSession(session);
             session.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, null));

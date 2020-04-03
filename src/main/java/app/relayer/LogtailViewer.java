@@ -6,8 +6,8 @@ import com.aspectran.core.component.bean.annotation.Component;
 import com.aspectran.core.component.bean.annotation.Dispatch;
 import com.aspectran.core.component.bean.annotation.Request;
 import com.aspectran.core.component.bean.annotation.Required;
-import com.aspectran.core.util.logging.Log;
-import com.aspectran.core.util.logging.LogFactory;
+import com.aspectran.core.util.logging.Logger;
+import com.aspectran.core.util.logging.LoggerFactory;
 import com.aspectran.core.util.security.InvalidPBTokenException;
 import com.aspectran.core.util.security.TimeLimitedPBTokenIssuer;
 import com.aspectran.web.activity.response.DefaultRestResponse;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Component
 public class LogtailViewer {
 
-    private static final Log log = LogFactory.getLog(LogtailViewer.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogtailViewer.class);
 
     private static final String ENDPOINT_CONFIG_FILE = "/config/endpoint-config.apon";
 
@@ -48,8 +48,8 @@ public class LogtailViewer {
         try {
             TimeLimitedPBTokenIssuer.validate(token);
         } catch (InvalidPBTokenException e) {
-            if (log.isDebugEnabled()) {
-                log.debug(e.getMessage(), e);
+            if (logger.isDebugEnabled()) {
+                logger.debug(e.getMessage(), e);
             }
             return new DefaultRestResponse().forbidden();
         }
