@@ -15,6 +15,7 @@
  */
 package app.relayer;
 
+import com.aspectran.core.activity.InstantActivitySupport;
 import com.aspectran.core.component.bean.ablility.InitializableBean;
 import com.aspectran.core.component.bean.annotation.AvoidAdvice;
 import com.aspectran.core.component.bean.annotation.Component;
@@ -24,7 +25,6 @@ import com.aspectran.core.util.logging.Logger;
 import com.aspectran.core.util.logging.LoggerFactory;
 import com.aspectran.core.util.security.InvalidPBTokenException;
 import com.aspectran.core.util.security.TimeLimitedPBTokenIssuer;
-import com.aspectran.web.socket.jsr356.ActivityContextAwareEndpoint;
 import com.aspectran.web.socket.jsr356.AspectranConfigurator;
 
 import javax.websocket.CloseReason;
@@ -48,7 +48,7 @@ import java.util.Set;
         configurator = AspectranConfigurator.class
 )
 @AvoidAdvice
-public class LogtailEndpoint extends ActivityContextAwareEndpoint implements InitializableBean {
+public class LogtailEndpoint extends InstantActivitySupport implements InitializableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(LogtailEndpoint.class);
 
