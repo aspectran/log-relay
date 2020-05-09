@@ -49,7 +49,7 @@ public class LogtailViewer {
             TimeLimitedPBTokenIssuer.validate(token);
         } catch (InvalidPBTokenException e) {
             if (logger.isDebugEnabled()) {
-                logger.debug(e.getMessage(), e);
+                logger.debug(e);
             }
             return new DefaultRestResponse().forbidden();
         }

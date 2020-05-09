@@ -150,9 +150,9 @@
                         <item>
                             workerName: n0
                             maxSessions: 99999
-                            maxIdleSeconds: 1800
-                            evictionIdleSeconds: 900
-                            scavengingIntervalSeconds: 600
+                            maxIdleSeconds: 10
+                            evictionIdleSeconds: 5
+                            scavengingIntervalSeconds: 15
                             removeUnloadableSessions: true
                             clusterMode: false
                         </item>
@@ -162,7 +162,7 @@
             <item name="sessionStoreFactory">
                 <bean class="com.aspectran.core.component.session.FileSessionStoreFactory">
                     <properties>
-                        <item name="storeDir">/temp/sessions/tow</item>
+                        <item name="storeDir">/temp/sessions/undertow</item>
                         <item name="nonPersistentAttributes" type="array">
                             <value>io.undertow.websocket.current-connections</value>
                         </item>
