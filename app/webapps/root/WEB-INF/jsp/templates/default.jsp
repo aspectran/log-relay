@@ -180,6 +180,7 @@
                     <p class="credits">Copyright © 2008-2020 The Aspectran Project</p>
                 </section>
                 <section id="subfooter-right" class="medium-6 cell">
+                    <%= com.aspectran.core.util.Aspectran.POWERED_BY_LINK %>
                 </section>
             </nav>
         </div>
