@@ -174,8 +174,11 @@
     <div id="subfooter">
         <div class="grid-container ${page.style}">
             <nav class="grid-x">
-                <section class="medium-10 medium-offset-2 large-11 large-offset-1 cell">
+                <section id="subfooter-left" class="medium-6 cell">
                     <p class="credits">Copyright © 2008-2020 The Aspectran Project</p>
+                </section>
+                <section id="subfooter-right" class="medium-6 cell">
+                    <%= com.aspectran.core.util.Aspectran.POWERED_BY_LINK %>
                 </section>
             </nav>
         </div>
