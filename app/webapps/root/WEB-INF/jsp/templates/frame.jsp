@@ -83,7 +83,7 @@
                 <nav role="navigation" aria-label="You are here:">
                     <ul class="breadcrumbs" itemprop="breadcrumb">
                         <li><a href="https://aspectran.com/en/">Aspectran</a></li>
-                        <li><a href="/">Log Relaye</a></li>
+                        <li><a href="/">Log Relayer</a></li>
                     </ul>
                 </nav>
             </div>
