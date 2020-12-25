@@ -19,10 +19,7 @@
     <logger name="org.quartz" level="info" additivity="false">
         <appender-ref ref="APP-OUT"/>
     </logger>
-    <logger name="org.apache.ibatis" level="error" additivity="false">
-        <appender-ref ref="APP-OUT"/>
-    </logger>
-    <logger name="app.demo" level="debug" additivity="false">
+    <logger name="app.relayer" level="debug" additivity="false">
         <appender-ref ref="APP-OUT"/>
     </logger>
     <root level="info">
