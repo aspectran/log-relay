@@ -15,7 +15,7 @@
  */
 package app.relayer;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
