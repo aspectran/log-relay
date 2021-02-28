@@ -25,8 +25,7 @@ import com.aspectran.core.util.logging.Logger;
 import com.aspectran.core.util.logging.LoggerFactory;
 import com.aspectran.core.util.security.InvalidPBTokenException;
 import com.aspectran.core.util.security.TimeLimitedPBTokenIssuer;
-import com.aspectran.web.socket.jsr356.AspectranConfigurator;
-
+import com.aspectran.websocket.jsr356.AspectranConfigurator;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
@@ -35,6 +34,7 @@ import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
