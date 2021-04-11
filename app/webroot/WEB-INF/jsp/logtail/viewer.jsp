@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<link rel="stylesheet" href="/assets/css/logtail-viewer.css">
+<script src="/assets/js/logtail-viewer.js"></script>
 <div class="grid-x endpoint-content">
     <div class="cell options">
         <ul class="layout-options">
@@ -31,8 +33,6 @@
         <pre class="logtail"></pre>
     </div>
 </div>
-<link rel="stylesheet" href="/assets/css/logtail-viewer.css">
-<script src="/assets/js/logtail-viewer.js"></script>
 <script>
     const endpoints = [];
 
