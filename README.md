@@ -1,7 +1,9 @@
 Log Relayer
 ===================
 
-Log Relayer can send the latest logs recorded on the server to the web browser through the web socket endpoint and provides an integrated view to observe the logs of several servers in real time.
+Log Relayer can send the latest logs recorded on the server to the web browser 
+through the web socket endpoint and provides an integrated view to observe the 
+logs of several servers in real time.
 
 ## Running Aspectow
 
@@ -22,7 +24,7 @@ Log Relayer can send the latest logs recorded on the server to the web browser t
 
   ```sh
   $ cd app/bin
-  $ ./shell.sh
+  $ ./jline-shell.sh
   ```
 
 - Access in your browser at http://localhost:8090
