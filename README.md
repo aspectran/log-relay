@@ -1,5 +1,5 @@
 Log Relayer
-===================
+===========
 
 Log Relayer can send the latest logs recorded on the server to the web browser 
 through the web socket endpoint and provides an integrated view to observe the 
@@ -24,7 +24,7 @@ logs of several servers in real time.
 
   ```sh
   $ cd app/bin
-  $ ./jline-shell.sh
+  $ ./shell.sh
   ```
 
 - Access in your browser at http://localhost:8090
