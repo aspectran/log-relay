@@ -58,7 +58,7 @@
                     <a class="logo" href="/" title="Aspectran"><img src="https://aspectran.com/assets/img/aspectran-site-logo.png" alt="Aspectran"/></a>
                 </div>
             </div>
-            <div class="top-bar-left">
+            <div class="top-bar-left show-for-large">
                 <ul class="dropdown menu" data-dropdown-menu>
                     <li>
                         <a>Log Relayer</a>
@@ -66,6 +66,16 @@
                 </ul>
             </div>
             <div class="top-bar-right">
+                <ul class="dropdown menu" data-dropdown-menu>
+                    <li>
+                        <a title="Demo Applications made with Aspectran">More Demo Apps</a>
+                        <ul class="submenu menu vertical" data-submenu>
+                            <li><a href="https://demo.aspectran.com">Aspectran Demo</a></li>
+                            <li><a href="https://jpetstore.aspectran.com">JPetStore Demo</a></li>
+                            <li><a href="https://skylark.aspectran.com">Skylark Terminal</a></li>
+                        </ul>
+                    </li>
+                </ul>
                 <div class="quick-search-box">
                     <form name="google_quick_search">
                         <div class="input-group">
