@@ -25,7 +25,7 @@ import com.aspectran.core.util.logging.Logger;
 import com.aspectran.core.util.logging.LoggerFactory;
 import com.aspectran.core.util.security.InvalidPBTokenException;
 import com.aspectran.core.util.security.TimeLimitedPBTokenIssuer;
-import com.aspectran.web.socket.jsr356.AspectranConfigurator;
+import com.aspectran.websocket.jsr356.AspectranConfigurator;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
