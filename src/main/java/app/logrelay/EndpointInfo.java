@@ -1,4 +1,4 @@
-package app.relayer;
+package app.logrelay;
 
 import com.aspectran.core.util.apon.AbstractParameters;
 import com.aspectran.core.util.apon.ParameterKey;

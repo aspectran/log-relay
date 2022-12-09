@@ -1,22 +1,20 @@
-Log Relayer
-===========
+Log Relay
+=========
 
-Log Relayer can send the latest logs recorded on the server to the web browser 
-through the web socket endpoint and provides an integrated view to observe the 
-logs of several servers in real time.
+Log Relay provides an integrated view to observe logs of multiple servers in real time.
 
 ## Running Aspectow
 
 - Clone this repository
 
   ```sh
-  $ git clone https://github.com/aspectran/log-relayer.git
+  $ git clone https://github.com/aspectran/log-relay.git
   ```
 
 - Build with Maven
 
   ```sh
-  $ cd log-relayer
+  $ cd log-relay
   $ mvn clean package
   ```
 

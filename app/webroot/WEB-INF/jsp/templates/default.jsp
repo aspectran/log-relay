@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <meta name="google" content="notranslate">
-    <title>${empty page.title ? "Log Relayer" : page.title}</title>
-    <meta name="description" content="${empty page.description ? "Welcome to Log Relayer" : page.description}" />
+    <title>${empty page.title ? "Log Relay" : page.title}</title>
+    <meta name="description" content="${empty page.description ? "Welcome to Log Relay" : page.description}" />
     <link rel="stylesheet" type="text/css" href="https://aspectran.com/assets/css/aspectran.css" />
     <link href="https://fonts.googleapis.com/css?family=Raleway:500,500i,700" rel="stylesheet">
     <script src="https://aspectran.com/assets/js/modernizr-custom.js"></script>
@@ -61,7 +61,7 @@
             <div class="top-bar-left">
                 <ul class="dropdown menu" data-dropdown-menu>
                     <li>
-                        <a>Log Relayer</a>
+                        <a>Log Relay</a>
                     </li>
                 </ul>
             </div>
@@ -127,7 +127,7 @@
                 <nav role="navigation" aria-label="You are here:">
                     <ul class="breadcrumbs" itemprop="breadcrumb">
                         <li><a href="https://aspectran.com/en/">Aspectran</a></li>
-                        <li><a href="/">Log Relayer</a></li>
+                        <li><a href="/">Log Relay</a></li>
                     </ul>
                 </nav>
             </div>
@@ -177,7 +177,7 @@
         <div class="grid-container">
             <nav class="grid-x">
                 <section id="subfooter-left" class="medium-6 cell">
-                    <p class="credits">Copyright © 2008-2021 The Aspectran Project</p>
+                    <p class="credits">Copyright © 2008-2022 The Aspectran Project</p>
                 </section>
                 <section id="subfooter-right" class="medium-6 cell">
                     <%= com.aspectran.core.util.Aspectran.POWERED_BY_LINK %>

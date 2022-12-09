@@ -19,7 +19,7 @@
     <logger name="org.quartz" level="info" additivity="false">
         <appender-ref ref="APP-LOG"/>
     </logger>
-    <logger name="app.relayer" level="debug" additivity="false">
+    <logger name="app.logrelay" level="debug" additivity="false">
         <appender-ref ref="APP-LOG"/>
     </logger>
     <root level="info">

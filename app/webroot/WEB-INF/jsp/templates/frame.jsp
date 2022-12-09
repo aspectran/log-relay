@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
     <meta name="google" content="notranslate">
-    <title>${empty page.title ? "Log Relayer" : page.title}</title>
-    <meta name="description" content="${empty page.description ? "Welcome to Log Relayer" : page.description}" />
+    <title>${empty page.title ? "Log Relay" : page.title}</title>
+    <meta name="description" content="${empty page.description ? "Welcome to Log Relay" : page.description}" />
     <link rel="stylesheet" type="text/css" href="https://aspectran.com/assets/css/aspectran.css" />
     <link href="https://fonts.googleapis.com/css?family=Raleway:500,500i,700" rel="stylesheet">
     <script src="https://aspectran.com/assets/js/modernizr-custom.js"></script>
@@ -45,7 +45,7 @@
             <a class="logo" href="/" title="Aspectran"><img src="https://aspectran.com/assets/img/aspectran-site-logo.png" alt="Aspectran"/></a>
         </div>
         <div class="title-bar-center">
-            <a href="#top-of-page">Log Relayer</a>
+            <a href="#top-of-page">Log Relay</a>
         </div>
         <div class="title-bar-right" data-toggle="gnb-menu">
             <a class="menu-icon" title="Menu"></a>
@@ -61,7 +61,7 @@
             <div class="top-bar-left show-for-large">
                 <ul class="dropdown menu" data-dropdown-menu>
                     <li>
-                        <a>Log Relayer</a>
+                        <a>Log Relay</a>
                     </li>
                 </ul>
             </div>
@@ -93,7 +93,7 @@
                 <nav role="navigation" aria-label="You are here:">
                     <ul class="breadcrumbs" itemprop="breadcrumb">
                         <li><a href="https://aspectran.com/en/">Aspectran</a></li>
-                        <li><a href="/">Log Relayer</a></li>
+                        <li><a href="/">Log Relay</a></li>
                     </ul>
                 </nav>
             </div>
@@ -157,13 +157,13 @@
                     <h5><a class="logo" title="Aspectran"><img src="https://aspectran.com/assets/img/aspectran-site-logo.png" width="90" height="90" alt="Aspectran" title="Aspectran"/></a></h5>
                 </div>
                 <div class="medium-4 large-4 cell">
-                    <h5>Log Relayer</h5>
-                    <p>Log Relayer는 서버에 기록되는 최신 로그들을 웹 소켓 엔드 포인트를 통해 웹 브라우저로 보낼 수 있으며, 실시간으로 여러 서버의 로그들을 관찰할 수 있는 통합뷰를 제공합니다.</p>
+                    <h5>Log Relay</h5>
+                    <p>Log Relay는 여러 서버의 로그를 실시간으로 관찰할 수 있는 통합 뷰를 제공합니다.</p>
                 </div>
                 <div class="small-6 medium-3 large-3 large-offset-1 cell">
                     <h5>Get Involved</h5>
                     <ul class="no-bullet">
-                        <li class="icon-github"> <a href="https://github.com/aspectran/log-relayer" target="_blank" title="" class="external">GitHub</a></li>
+                        <li class="icon-github"> <a href="https://github.com/aspectran/log-relay" target="_blank" title="" class="external">GitHub</a></li>
                     </ul>
                 </div>
                 <div class="small-6 medium-3 large-3 cell">

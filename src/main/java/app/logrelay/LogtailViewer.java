@@ -1,4 +1,4 @@
-package app.relayer;
+package app.logrelay;
 
 import com.aspectran.core.activity.Translet;
 import com.aspectran.core.component.bean.annotation.Action;

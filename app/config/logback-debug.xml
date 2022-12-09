@@ -25,7 +25,7 @@
     <logger name="org.quartz" level="info" additivity="false">
         <appender-ref ref="APP-LOG"/>
     </logger>
-    <logger name="app.relayer" level="debug" additivity="false">
+    <logger name="app.logrelay" level="debug" additivity="false">
         <appender-ref ref="APP-LOG"/>
     </logger>
 
@@ -46,7 +46,7 @@
     <logger name="org.quartz" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="app.relayer" level="debug" additivity="false">
+    <logger name="app.logrelay" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
