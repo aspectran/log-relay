@@ -1,12 +1,12 @@
 tailer: {
-    name: app-log
+    name: app.log
     file: ./app/logs/app.log
     lastLines: 10
     sampleInterval: 300
     visualizer: missileLaunch1
 }
 tailer: {
-    name: access-log
+    name: undertow-access.log
     file: ./app/logs/undertow-access.log
     lastLines: 18
 }
