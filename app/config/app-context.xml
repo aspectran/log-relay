@@ -29,6 +29,6 @@
     </aspect>
 
     <append file="/config/server/server.xml"/>
-    <append file="/config/web/web.xml"/>
+    <append resource="web/web.xml"/>
 
 </aspectran>
