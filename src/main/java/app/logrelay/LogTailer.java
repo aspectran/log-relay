@@ -22,6 +22,7 @@ import org.apache.commons.io.input.Tailer;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -131,14 +132,17 @@ public class LogTailer extends AbstractLifeCycle {
         if (tailerListener == null) {
             throw new IllegalStateException("No TailerListener configured");
         }
-
-        File logFile = new File(file);
-        tailer = Tailer.create(logFile, charset, tailerListener, sampleInterval, true, false, bufferSize);
+        tailer = Tailer.builder()
+                .setFile(new File(file))
+                .setTailerListener(tailerListener)
+                .setDelayDuration(Duration.ofMillis(sampleInterval))
+                .setTailFromEnd(true)
+                .get();
     }
 
     protected void doStop() throws Exception {
         if (tailer != null) {
-            tailer.stop();
+            tailer.close();
             tailer = null;
         }
     }
