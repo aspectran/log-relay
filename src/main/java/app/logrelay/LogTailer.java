@@ -149,7 +149,10 @@ public class LogTailer extends AbstractLifeCycle {
 
     private String[] readLastLines(File file, int lastLines) {
         List<String> list = new ArrayList<>();
-        try (ReversedLinesFileReader reversedLinesFileReader = new ReversedLinesFileReader(file, charset)) {
+        try (ReversedLinesFileReader reversedLinesFileReader = ReversedLinesFileReader.builder()
+                .setFile(file)
+                .setCharset(charset)
+                .get()) {
             int count = 0;
             while (count++ < lastLines) {
                 String line = reversedLinesFileReader.readLine();

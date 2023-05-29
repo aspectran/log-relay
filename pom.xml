@@ -82,7 +82,7 @@
                 <version>3.6.0</version>
                 <executions>
                     <execution>
-                        <id>copy-dependencies-1</id>
+                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
