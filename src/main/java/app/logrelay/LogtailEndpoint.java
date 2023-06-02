@@ -133,7 +133,7 @@ public class LogtailEndpoint extends InstantActivitySupport implements Initializ
         JsonWriter jsonWriter = new JsonWriter();
         jsonWriter.nullWritable(false);
         jsonWriter.write(logTailerManager.getLogTailerInfoList(false));
-        session.getAsyncRemote().sendText(MSG_AVAILABLE_TAILERS + jsonWriter.toString());
+        session.getAsyncRemote().sendText(MSG_AVAILABLE_TAILERS + jsonWriter);
     }
 
     private void addSession(Session session, String message) throws IOException {
