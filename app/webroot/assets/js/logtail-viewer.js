@@ -31,11 +31,18 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
                     return;
                 }
                 let msg = event.data;
+                console.log('msg', msg);
                 let idx = msg.indexOf(":");
                 if (idx !== -1) {
                     if (self.established) {
                         let logtailName = msg.substring(0, idx);
-                        self.printMessage(logtailName, msg.substring(idx + 1));
+                        let text = msg.substring(idx + 1);
+                        if (text.startsWith("past:")) {
+                            text = text.substring(5);
+                            self.printMessage(logtailName, text, false);
+                        } else {
+                            self.printMessage(logtailName, text, true);
+                        }
                     } else {
                         let command = msg.substring(0, idx);
                         if (command === "availableTailers") {
@@ -137,11 +144,13 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printMessage = function(logtailName, text) {
+    this.printMessage = function(logtailName, text, visualize) {
         this.indicate(logtailName);
         let logtail = this.getLogtail(logtailName);
         if (!logtail.data("pause")) {
-            this.visualize(logtailName, text);
+            if (visualize) {
+                this.visualize(logtailName, text);
+            }
             $("<p/>").text(text).appendTo(logtail);
             this.scrollToBottom(logtail);
         }

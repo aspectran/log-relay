@@ -1,7 +1,7 @@
 tailer: {
     name: app.log
     file: ./app/logs/app.log
-    lastLines: 10
+    lastLines: 100
     sampleInterval: 300
     visualizer: missileLaunch1
 }

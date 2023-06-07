@@ -106,7 +106,7 @@ public class LogTailerManager {
                     LogTailer tailer = tailers.get(name);
                     if (tailer != null) {
                         list.add(name);
-                        tailer.readLastLines();
+                        tailer.readPastLines();
                         if (!tailer.isRunning()) {
                             try {
                                 tailer.start();
@@ -119,7 +119,7 @@ public class LogTailerManager {
                 session.getUserProperties().put(TAILERS_PROPERTY, list.toArray(new String[0]));
             } else {
                 for (LogTailer tailer : tailers.values()) {
-                    tailer.readLastLines();
+                    tailer.readPastLines();
                     if (!tailer.isRunning()) {
                         try {
                             tailer.start();

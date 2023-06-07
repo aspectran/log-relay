@@ -52,6 +52,8 @@ public class LogTailer extends AbstractLifeCycle {
 
     private String visualizerName;
 
+    private LogtailEndpoint endpoint;
+
     private LogTailerListener tailerListener;
 
     private Tailer tailer;
@@ -115,39 +117,21 @@ public class LogTailer extends AbstractLifeCycle {
     }
 
     public void setEndpoint(LogtailEndpoint endpoint) {
+        this.endpoint = endpoint;
         this.tailerListener = new LogTailerListener(name, endpoint);
     }
 
-    protected void readLastLines() {
+    protected void readPastLines() {
         if (lastLines > 0) {
             File logFile = new File(file);
-            String[] lines = readLastLines(logFile, lastLines);
+            String[] lines = readPastLines(logFile, lastLines);
             for (String line : lines) {
-                tailerListener.handle(line);
+                endpoint.broadcast(name + ":past:" + line);
             }
         }
     }
 
-    protected void doStart() throws Exception {
-        if (tailerListener == null) {
-            throw new IllegalStateException("No TailerListener configured");
-        }
-        tailer = Tailer.builder()
-                .setFile(new File(file))
-                .setTailerListener(tailerListener)
-                .setDelayDuration(Duration.ofMillis(sampleInterval))
-                .setTailFromEnd(true)
-                .get();
-    }
-
-    protected void doStop() throws Exception {
-        if (tailer != null) {
-            tailer.close();
-            tailer = null;
-        }
-    }
-
-    private String[] readLastLines(File file, int lastLines) {
+    private String[] readPastLines(File file, int lastLines) {
         List<String> list = new ArrayList<>();
         try (ReversedLinesFileReader reversedLinesFileReader = ReversedLinesFileReader.builder()
                 .setFile(file)
@@ -166,6 +150,27 @@ public class LogTailer extends AbstractLifeCycle {
             // ignore
         }
         return list.toArray(new String[0]);
+    }
+
+    @Override
+    protected void doStart() throws Exception {
+        if (tailerListener == null) {
+            throw new IllegalStateException("No TailerListener configured");
+        }
+        tailer = Tailer.builder()
+                .setFile(new File(file))
+                .setTailerListener(tailerListener)
+                .setDelayDuration(Duration.ofMillis(sampleInterval))
+                .setTailFromEnd(true)
+                .get();
+    }
+
+    @Override
+    protected void doStop() throws Exception {
+        if (tailer != null) {
+            tailer.close();
+            tailer = null;
+        }
     }
 
 }
