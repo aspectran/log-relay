@@ -16,6 +16,8 @@
 package app.logrelay;
 
 import com.aspectran.core.util.lifecycle.AbstractLifeCycle;
+import com.aspectran.core.util.logging.Logger;
+import com.aspectran.core.util.logging.LoggerFactory;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.io.input.Tailer;
 
@@ -28,6 +30,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class LogTailer extends AbstractLifeCycle {
+
+    private static final Logger logger = LoggerFactory.getLogger(LogTailer.class);
 
     private static final Charset DEFAULT_CHARSET = Charset.defaultCharset();
 
@@ -121,17 +125,21 @@ public class LogTailer extends AbstractLifeCycle {
         this.tailerListener = new LogTailerListener(name, endpoint);
     }
 
-    protected void readPastLines() {
+    protected void readLastLines() {
         if (lastLines > 0) {
-            File logFile = new File(file);
-            String[] lines = readPastLines(logFile, lastLines);
-            for (String line : lines) {
-                endpoint.broadcast(name + ":past:" + line);
+            try {
+                File logFile = new File(file).getCanonicalFile();
+                String[] lines = readLastLines(logFile, lastLines);
+                for (String line : lines) {
+                    endpoint.broadcast(name + ":last:" + line);
+                }
+            } catch (IOException e) {
+                logger.error("No such log file: " + file, e);
             }
         }
     }
 
-    private String[] readPastLines(File file, int lastLines) {
+    private String[] readLastLines(File file, int lastLines) throws IOException {
         List<String> list = new ArrayList<>();
         try (ReversedLinesFileReader reversedLinesFileReader = ReversedLinesFileReader.builder()
                 .setFile(file)
@@ -146,8 +154,6 @@ public class LogTailer extends AbstractLifeCycle {
                 list.add(line);
             }
             Collections.reverse(list);
-        } catch (IOException e) {
-            // ignore
         }
         return list.toArray(new String[0]);
     }

@@ -31,17 +31,17 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
                     return;
                 }
                 let msg = event.data;
-                console.log('msg', msg);
+                console.log(msg);
                 let idx = msg.indexOf(":");
                 if (idx !== -1) {
                     if (self.established) {
-                        let logtailName = msg.substring(0, idx);
+                        let tailerName = msg.substring(0, idx);
                         let text = msg.substring(idx + 1);
-                        if (text.startsWith("past:")) {
+                        if (text.startsWith("last:")) {
                             text = text.substring(5);
-                            self.printMessage(logtailName, text, false);
+                            self.printMessage(tailerName, text, false);
                         } else {
-                            self.printMessage(logtailName, text, true);
+                            self.printMessage(tailerName, text, true);
                         }
                     } else {
                         let command = msg.substring(0, idx);
@@ -104,9 +104,9 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }, 57000);
     };
 
-    this.getLogtail = function(logtailName) {
-        if (this.logtails && logtailName) {
-            return this.logtails[logtailName];
+    this.getLogtail = function(tailerName) {
+        if (this.logtails && tailerName) {
+            return this.logtails[tailerName];
         } else {
             return $(".logtail");
         }
@@ -144,21 +144,21 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printMessage = function(logtailName, text, visualize) {
-        this.indicate(logtailName);
-        let logtail = this.getLogtail(logtailName);
+    this.printMessage = function(tailerName, text, visualize) {
+        this.indicate(tailerName);
+        let logtail = this.getLogtail(tailerName);
         if (!logtail.data("pause")) {
             if (visualize) {
-                this.visualize(logtailName, text);
+                this.visualize(tailerName, text);
             }
             $("<p/>").text(text).appendTo(logtail);
             this.scrollToBottom(logtail);
         }
     };
 
-    this.printEventMessage = function(text, logtailName) {
-        if (logtailName) {
-            let logtail = this.getLogtail(logtailName);
+    this.printEventMessage = function(text, tailerName) {
+        if (tailerName) {
+            let logtail = this.getLogtail(tailerName);
             $("<p/>").addClass("event ellipses").html(text).appendTo(logtail);
             this.scrollToBottom(logtail);
         } else {
@@ -168,9 +168,9 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.printErrorMessage = function(text, logtailName) {
-        if (logtailName) {
-            let logtail = this.getLogtail(logtailName);
+    this.printErrorMessage = function(text, tailerName) {
+        if (tailerName) {
+            let logtail = this.getLogtail(tailerName);
             $("<p/>").addClass("event error").html(text).appendTo(logtail);
             this.scrollToBottom(logtail);
         } else {
@@ -180,8 +180,8 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.indicate = function(logtailName) {
-        let indicators = this.indicators[logtailName];
+    this.indicate = function(tailerName) {
+        let indicators = this.indicators[tailerName];
         if (indicators) {
             for (let key in indicators) {
                 let indicator = indicators[key];
@@ -195,8 +195,8 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
         }
     };
 
-    this.visualize = function(logtailName, text) {
-        let missileTrack = this.missileTracks[logtailName];
+    this.visualize = function(tailerName, text) {
+        let missileTrack = this.missileTracks[tailerName];
         if (missileTrack) {
             let self = this;
             setTimeout(function() {
