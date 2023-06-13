@@ -72,7 +72,6 @@
                         <ul class="submenu menu vertical" data-submenu>
                             <li><a href="https://demo.aspectran.com">Aspectran Demo</a></li>
                             <li><a href="https://jpetstore.aspectran.com">JPetStore Demo</a></li>
-                            <li><a href="https://skylark.aspectran.com">Skylark Terminal</a></li>
                         </ul>
                     </li>
                 </ul>
