@@ -3,6 +3,6 @@
 
     <include file="${aspectran.basePath}/config/logging/logback-default.xml"/>
 
-    <logger name="app.logrelay" level="info"/>
+    <logger name="app.logrelay" level="debug"/>
 
 </configuration>
