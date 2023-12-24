@@ -15,9 +15,9 @@
  */
 package app.logrelay;
 
-import com.aspectran.core.util.lifecycle.AbstractLifeCycle;
-import com.aspectran.core.util.logging.Logger;
-import com.aspectran.core.util.logging.LoggerFactory;
+import com.aspectran.utils.lifecycle.AbstractLifeCycle;
+import com.aspectran.utils.logging.Logger;
+import com.aspectran.utils.logging.LoggerFactory;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 import org.apache.commons.io.input.Tailer;
 

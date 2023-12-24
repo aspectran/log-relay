@@ -15,7 +15,7 @@
  */
 package app;
 
-import com.aspectran.core.util.ResourceUtils;
+import com.aspectran.utils.ResourceUtils;
 import com.aspectran.shell.jline.JLineAspectranShell;
 
 import java.io.File;

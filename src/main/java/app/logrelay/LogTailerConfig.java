@@ -1,7 +1,7 @@
 package app.logrelay;
 
-import com.aspectran.core.util.apon.AbstractParameters;
-import com.aspectran.core.util.apon.ParameterKey;
+import com.aspectran.utils.apon.AbstractParameters;
+import com.aspectran.utils.apon.ParameterKey;
 
 import java.io.File;
 import java.io.IOException;
