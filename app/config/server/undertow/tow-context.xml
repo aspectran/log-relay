@@ -9,27 +9,24 @@
 
     <environment>
         <properties>
-            <item name="tow.context.root.name">root</item>
-            <item name="tow.context.root.path">/</item>
-            <item name="tow.context.root.baseDir">/webroot</item>
-            <item name="tow.context.root.scratchDir">/work/_webroot</item>
+            <item name="tow.context.root.path">/webroot</item>
+            <item name="tow.context.root.scratch_dir">/work/_webroot</item>
         </properties>
     </environment>
 
-    <bean id="tow.context.root.servletContext"
-          class="com.aspectran.undertow.server.servlet.TowServletContext"
+    <bean id="tow.context.root.servletContext" class="com.aspectran.undertow.server.servlet.TowServletContext"
           scope="prototype">
         <properties>
-            <item name="deploymentName">%{tow.context.root.name}.war</item>
-            <item name="contextPath">%{tow.context.root.path}</item>
+            <item name="deploymentName">root.war</item>
+            <item name="contextPath">/</item>
             <item name="resourceManager">
-                <bean class="com.aspectran.undertow.server.handler.resource.TowResourceManager">
+                <bean class="com.aspectran.undertow.server.resource.TowResourceManager">
                     <properties>
-                        <item name="base">%{tow.context.root.baseDir}</item>
+                        <item name="base">%{tow.context.root.path}</item>
                     </properties>
                 </bean>
             </item>
-            <item name="scratchDir">%{tow.context.root.scratchDir}</item>
+            <item name="scratchDir">%{tow.context.root.scratch_dir}</item>
             <item name="sessionManager">#{tow.context.root.sessionManager}</item>
             <item name="servletSessionConfig">
                 <bean class="io.undertow.servlet.api.ServletSessionConfig"/>
@@ -71,7 +68,7 @@
                 <bean class="com.aspectran.undertow.server.servlet.TowJasperInitializer">
                     <properties>
                         <item name="tldResources" type="array">
-                            <value>/webroot/WEB-INF/taglibs/</value>
+                            <value>/webroot/WEB-INF/lib/taglibs-standard-10.0.2.jar</value>
                             <value>classpath:com/aspectran/web/support/tags/aspectran.tld</value>
                         </item>
                     </properties>
@@ -83,6 +80,51 @@
                         <item name="directBuffers" valueType="boolean">false</item>
                         <item name="bufferSize" valueType="int">1024</item>
                     </properties>
+                </bean>
+            </item>
+        </properties>
+    </bean>
+
+    <bean id="tow.context.root.hybridServletHandler" class="com.aspectran.undertow.server.servlet.HybridServletHandlerFactoryBean"
+          scope="prototype">
+        <properties>
+            <item name="servletContainer">#{tow.server^servletContainer}</item>
+            <item name="staticResourceHandler">#{tow.context.root.staticResourceHandler}</item>
+        </properties>
+        <properties profile="prod">
+            <item name="outerHandlerChainWrappers" type="array">
+                <value>#{tow.server.encodingHandlerWrapper}</value>
+                <value>#{tow.server.accessLogHandlerWrapper}</value>
+            </item>
+        </properties>
+        <properties profile="!prod">
+            <item name="outerHandlerChainWrappers" type="array">
+                <value>#{tow.server.encodingHandlerWrapper}</value>
+            </item>
+        </properties>
+    </bean>
+
+    <bean id="tow.context.root.staticResourceHandler" class="com.aspectran.undertow.server.resource.StaticResourceHandler"
+          initMethod="autoDetect" scope="prototype">
+        <arguments>
+            <item>
+                <bean class="com.aspectran.undertow.server.resource.TowResourceManager">
+                    <properties>
+                        <item name="base">%{tow.context.root.path}</item>
+                    </properties>
+                </bean>
+            </item>
+        </arguments>
+        <properties>
+            <item name="resourcePathPatterns">
+                <bean class="com.aspectran.undertow.server.resource.ResourcePathPatterns">
+                    <arguments>
+                        <item>
+                            +: /favicon.ico
+                            +: /robots.txt
+                            +: /ads.txt
+                        </item>
+                    </arguments>
                 </bean>
             </item>
         </properties>
