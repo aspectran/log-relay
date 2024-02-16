@@ -25,7 +25,7 @@ import com.aspectran.utils.logging.Logger;
 import com.aspectran.utils.logging.LoggerFactory;
 import com.aspectran.utils.security.InvalidPBTokenException;
 import com.aspectran.utils.security.TimeLimitedPBTokenIssuer;
-import com.aspectran.websocket.jsr356.AspectranConfigurator;
+import com.aspectran.web.websocket.jsr356.AspectranConfigurator;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
