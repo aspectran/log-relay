@@ -210,9 +210,9 @@ function LogtailViewer(endpoint, endpointEstablished, establishCompleted) {
     };
 
     // A function for visualizing Aspectran app logs
-    const pattern1 = /^Session ([\w\.]+) complete, active requests=(\d+)/i;
+    const pattern1 = /^Session ([\w.]+) complete, active requests=(\d+)/i;
     const pattern2 = /^Invalidate session id=([\w\.]+)/i;
-    const pattern3 = /^Session ([\w\.]+) accessed, stopping timer, active requests=(\d+)/i;
+    const pattern3 = /^Session ([\w.]+) accessed, stopping timer, active requests=(\d+)/i;
     const pattern4 = /^Create new session id=([\w\.]+)/i;
     this.missileLaunch1 = function(missileTrack, text) {
         let idx = text.indexOf("] ");
