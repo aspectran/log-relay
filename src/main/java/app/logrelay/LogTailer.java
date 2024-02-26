@@ -15,6 +15,7 @@
  */
 package app.logrelay;
 
+import com.aspectran.utils.annotation.jsr305.NonNull;
 import com.aspectran.utils.lifecycle.AbstractLifeCycle;
 import com.aspectran.utils.logging.Logger;
 import com.aspectran.utils.logging.LoggerFactory;
@@ -139,6 +140,7 @@ public class LogTailer extends AbstractLifeCycle {
         }
     }
 
+    @NonNull
     private String[] readLastLines(File file, int lastLines) throws IOException {
         List<String> list = new ArrayList<>();
         try (ReversedLinesFileReader reversedLinesFileReader = ReversedLinesFileReader.builder()
