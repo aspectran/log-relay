@@ -122,6 +122,15 @@
                             </excludes>
                         </fileset>
                         <fileset>
+                            <directory>app/temp</directory>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                            <excludes>
+                                <exclude>.gitignore</exclude>
+                            </excludes>
+                        </fileset>
+                        <fileset>
                             <directory>app/work</directory>
                             <includes>
                                 <include>_resource_*/</include>
@@ -151,29 +160,6 @@
             <groupId>com.aspectran</groupId>
             <artifactId>aspectran-with-undertow</artifactId>
             <version>${aspectran.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
