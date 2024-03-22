@@ -77,7 +77,7 @@
                 <bean class="com.aspectran.undertow.server.servlet.TowJasperInitializer">
                     <properties>
                         <item name="tldResources" type="array">
-                            <value>/webroot/WEB-INF/lib/taglibs-standard-10.0.2.jar</value>
+                            <value>/webroot/WEB-INF/taglibs/</value>
                             <value>classpath:com/aspectran/web/support/tags/aspectran.tld</value>
                         </item>
                     </properties>
@@ -103,10 +103,10 @@
                     <arguments>
                         <item>
                             workerName: n0
-                            maxActiveSessions: 10
-                            maxIdleSeconds: 1800
-                            evictionIdleSeconds: 900
-                            scavengingIntervalSeconds: 600
+                            maxActiveSessions: 9999
+                            maxIdleSeconds: 489
+                            evictionIdleSeconds: 258
+                            scavengingIntervalSeconds: 180
                             clusterEnabled: false
                         </item>
                     </arguments>
@@ -116,6 +116,7 @@
                 <bean class="com.aspectran.core.component.session.FileSessionStoreFactory">
                     <properties>
                         <item name="storeDir">/work/_sessions/tow</item>
+                        <item name="gracePeriodSecs" valueType="int">10</item>
                         <item name="nonPersistentAttributes" type="array">
                             <value>io.undertow.websocket.current-connections</value>
                         </item>
