@@ -115,7 +115,7 @@
             <item name="sessionStore">
                 <bean class="com.aspectran.core.component.session.FileSessionStoreFactory">
                     <properties>
-                        <item name="storeDir">/work/_sessions/tow</item>
+                        <item name="storeDir">/work/_sessions/%{tow.context.root.name}</item>
                         <item name="gracePeriodSecs" valueType="int">10</item>
                         <item name="nonPersistentAttributes" type="array">
                             <value>io.undertow.websocket.current-connections</value>
