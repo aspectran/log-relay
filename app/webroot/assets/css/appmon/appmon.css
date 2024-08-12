@@ -1,6 +1,4 @@
 .options {
-    margin-top: -15px;
-    padding: 10px 0;
     font-size: 90%;
     text-align: right;
 }
@@ -27,18 +25,37 @@ ul.layout-options li.on {
 ul.layout-options li.on a {
     color: #fff;
 }
+ul.speed-options {
+    float: right;
+    list-style-type: none;
+    margin: 0;
+    display: none;
+}
+ul.speed-options li {
+    float: left;
+    margin-left: .3em;
+    border: 1px solid #ccc;
+    padding: 0 .5em;
+    border-radius: 5px;
+    color: #777;
+    cursor: pointer;
+}
+ul.speed-options li.on {
+    background-color: #748fa0;
+    color: #fff;
+}
 
-.logtail-content .status-bar {
+.logtail-box .status-bar {
     background-color: #677278;
     color: #eee;
     overflow: auto;
     padding : 0 7px 0 10px;
     height: 29px;
 }
-.logtail-content .status-bar.on {
+.logtail-box .status-bar.on {
     background-color: #709185;
 }
-.logtail-content .status-bar h4 {
+.logtail-box .status-bar h4 {
     float: left;
     width: 70%;
     height: 29px;
@@ -47,22 +64,22 @@ ul.layout-options li.on a {
     font-weight: normal;
     margin: 0;
 }
-.logtail-content .status-bar a {
+.logtail-box .status-bar a {
     float: right;
     line-height: 29px;
     margin-left: 10px;
     color: #fff;
 }
-.logtail-content .status-bar a:hover {
+.logtail-box .status-bar a:hover {
     color: red;
 }
-.logtail-content .status-bar a.on {
+.logtail-box .status-bar a.on {
     color: #980000;
 }
-.logtail-content .status-bar .tailing-switch {
+.logtail-box .status-bar .tailing-switch {
     line-height: 26px;
 }
-.logtail-content .status-bar .tailing-switch .tailing-status {
+.logtail-box .status-bar .tailing-switch .tailing-status {
     display: inline-block;
     height: 20px;
     width: 20px;
@@ -70,7 +87,7 @@ ul.layout-options li.on a {
     border-radius: 50%;
     position: relative;
 }
-.logtail-content .status-bar .tailing-switch .tailing-status::after {
+.logtail-box .status-bar .tailing-switch .tailing-status::after {
     content: "";
     position: absolute;
     top: 0;
@@ -84,24 +101,24 @@ ul.layout-options li.on a {
     background: #f1f1f1;
     border-radius: 50%;
 }
-.logtail-content .status-bar .tailing-switch .tailing-status.on {
+.logtail-box .status-bar .tailing-switch .tailing-status.on {
     background-color: #39aa56;
 }
-.logtail-content .logtail {
+.logtail-box .logtail {
     clear: both;
     margin: 0;
     padding: 10px;
     overflow: auto;
-    height: 640px;
+    height: 600px;
     color: #f1f1f1;
     background-color: #222;
     border: none;
     border-radius: 0;
 }
-.logtail-content.with-track .logtail {
-    height: 520px;
+.logtail-box.with-track .logtail {
+    height: 480px;
 }
-.logtail-content .logtail p {
+.logtail-box .logtail p {
     font-size: 12px;
     line-height: 16px;
     white-space: nowrap;
@@ -109,7 +126,7 @@ ul.layout-options li.on a {
     margin: 0;
     padding: 0;
 }
-.logtail-content .logtail p.event {
+.logtail-box .logtail p.event {
     border-radius: 20px;
     text-align: center;
     border: 1px solid rgba(186, 254, 230, 0.53);
@@ -118,24 +135,27 @@ ul.layout-options li.on a {
     color: #fff;
     background-color: #333;
 }
-.logtail-content .logtail p.event.error {
+.logtail-box .logtail p.event.error {
     background-color: palevioletred;
     border: 1px solid palevioletred;
     color: yellow;
 }
 
-.tiled .tabs {
+.endpoint-box.stacked .group.tabs {
     display: none;
 }
-.tiled .logtail-content.available {
+.endpoint-box.stacked .group-box.available {
     display: block !important;
     padding: 1px;
 }
-.tiled .logtail-content .logtail {
+.endpoint-box.stacked .logtail-box .logtail {
     height: 580px;
 }
-.tiled .logtail-content.with-track .logtail {
+.endpoint-box.stacked .logtail-box.with-track .logtail {
     height: 460px;
+}
+.endpoint-box.compact.vertical .logtail-box.available.no-track .logtail {
+    height: 350px;
 }
 
 @keyframes missileAnimation {
@@ -174,6 +194,9 @@ ul.layout-options li.on a {
     animation-iteration-count: 1;
     z-index: 100;
 }
+.missile.hidden {
+    display: none;
+}
 .mis-1 {
     animation-duration: .8s;
 }
@@ -186,4 +209,51 @@ ul.layout-options li.on a {
     height: 20px;
     background: linear-gradient(to right, rgba(9, 17, 39, 0) 0%, rgba(255, 29, 112, 0.4) 100%);
     animation-duration: 1.3s;
+}
+.status-box {
+    display: none;
+}
+.status-box .panel {
+    border: 1px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    border-radius: 0;
+    height: 260px;
+}
+.status-box dl.sessions dt {
+    float: left;
+    clear: left;
+    padding: 0;
+    margin: 0;
+    height: 30px;
+    font-size: 1em;
+}
+.status-box dl.sessions dd {
+    text-align: right;
+    font-weight: bold;
+    font-size: 1em;
+    padding: 0;
+    margin: 0;
+    height: 30px;
+}
+.sessions-box {
+    overflow-y: auto;
+    list-style-type: none;
+}
+.sessions-box ul.sessions {
+    margin-left: 0;
+}
+.sessions-box ul.sessions li {
+    list-style-type: none;
+    white-space: nowrap;
+}
+.sessions-box ul.sessions li .indicator {
+    background-color: #13CF13;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+.sessions-box ul.sessions li .indicator.logged-out {
+    background-color: #ccc;
 }

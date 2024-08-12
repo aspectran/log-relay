@@ -13,72 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.logrelay;
+package app.logrelay.appmon;
 
-import com.aspectran.core.activity.Translet;
+import app.logrelay.appmon.endpoint.EndpointInfo;
 import com.aspectran.core.component.bean.annotation.Action;
+import com.aspectran.core.component.bean.annotation.Autowired;
 import com.aspectran.core.component.bean.annotation.Component;
 import com.aspectran.core.component.bean.annotation.Dispatch;
 import com.aspectran.core.component.bean.annotation.Request;
+import com.aspectran.core.component.bean.annotation.RequestToGet;
 import com.aspectran.core.component.bean.annotation.Required;
+import com.aspectran.utils.StringUtils;
 import com.aspectran.utils.logging.Logger;
 import com.aspectran.utils.logging.LoggerFactory;
 import com.aspectran.utils.security.InvalidPBTokenException;
-import com.aspectran.utils.security.TimeLimitedPBTokenIssuer;
 import com.aspectran.web.activity.response.DefaultRestResponse;
 import com.aspectran.web.activity.response.RestResponse;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * <p>Created: 2020/02/23</p>
  */
-@Component
-public class LogtailViewer {
+@Component("/appmon/monitoring")
+public class MonitoringAction {
 
-    private static final Logger logger = LoggerFactory.getLogger(LogtailViewer.class);
+    private static final Logger logger = LoggerFactory.getLogger(MonitoringAction.class);
 
-    private static final String ENDPOINT_CONFIG_FILE = "/config/endpoint-config.apon";
+    private final AppMonManager appMonManager;
 
-    @Request("/${endpoint}")
-    @Dispatch("templates/frame")
-    @Action("page")
-    public Map<String, String> viewer(String endpoint) {
-        Map<String, String> map = new HashMap<>();
-        map.put("include", "logtail/viewer");
-        map.put("style", "fluid compact");
-        map.put("token", TimeLimitedPBTokenIssuer.getToken());
-        if (endpoint != null) {
-            map.put("endpoint", endpoint);
-        }
-        return map;
+    @Autowired
+    public MonitoringAction(AppMonManager appMonManager) {
+        this.appMonManager = appMonManager;
     }
 
-    @Request("/endpoints/${token}")
-    public RestResponse getEndpoints(Translet translet, @Required String token) throws IOException {
+    @Request("/${endpoint}")
+    @Dispatch("templates/default")
+    @Action("page")
+    public Map<String, String> viewer(String endpoint) {
+        return Map.of(
+                "headinclude", "appmon/_endpoints",
+                "include", "appmon/appmon",
+                "style", "fluid compact",
+                "token", appMonManager.issueToken(),
+                "endpoint", StringUtils.nullToEmpty(endpoint)
+        );
+    }
+
+    @RequestToGet("/endpoints/${token}")
+    public RestResponse getEndpoints(@Required String token) {
         try {
-            TimeLimitedPBTokenIssuer.validate(token);
+            appMonManager.validateToken(token);
         } catch (InvalidPBTokenException e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(e);
             }
             return new DefaultRestResponse().forbidden();
         }
-        File file = translet.getApplicationAdapter().toRealPathAsFile(ENDPOINT_CONFIG_FILE);
-        EndpointConfig endpointConfig = new EndpointConfig(file);
-        List<EndpointInfo> endpointInfoList = endpointConfig.getEndpointInfoList();
-        for (EndpointInfo endpointInfo : endpointInfoList) {
-            String url = endpointInfo.getUrl();
-            if (!url.endsWith("/")) {
-                url += "/";
-            }
-            url += TimeLimitedPBTokenIssuer.getToken();
-            endpointInfo.setUrl(url);
-        }
+        List<EndpointInfo> endpointInfoList = appMonManager.getAvailableEndpointInfoList(token);
         return new DefaultRestResponse(endpointInfoList).ok();
     }
 

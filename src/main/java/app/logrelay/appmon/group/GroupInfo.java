@@ -13,53 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.logrelay;
+package app.logrelay.appmon.group;
 
 import com.aspectran.utils.apon.AbstractParameters;
 import com.aspectran.utils.apon.ParameterKey;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import com.aspectran.utils.apon.ValueType;
 
 /**
  * <p>Created: 2020/02/12</p>
  */
-public class LogTailerConfig extends AbstractParameters {
+public class GroupInfo extends AbstractParameters {
 
-    private static final ParameterKey tailer;
+    private static final ParameterKey name;
+    private static final ParameterKey title;
 
     private static final ParameterKey[] parameterKeys;
 
     static {
-        tailer = new ParameterKey("tailer", LogTailerInfo.class, true, true);
+        name = new ParameterKey("name", ValueType.STRING);
+        title = new ParameterKey("title", ValueType.STRING);
 
         parameterKeys = new ParameterKey[] {
-                tailer
+                name,
+                title
         };
     }
 
-    public LogTailerConfig() {
+    public GroupInfo() {
         super(parameterKeys);
     }
 
-    public LogTailerConfig(String text) throws IOException {
-        this();
-        readFrom(text);
+    public String getName() {
+        return getString(name);
     }
 
-    public LogTailerConfig(File file) throws IOException {
-        this();
-        readFrom(file);
+    public void setName(String name) {
+        putValue(GroupInfo.name, name);
     }
 
-    public List<LogTailerInfo> getLogTailerInfoList() {
-        return getParametersList(tailer);
+    public String getTitle() {
+        return getString(title);
     }
 
-    public LogTailerConfig addLogTailerInfo(LogTailerInfo logTailerInfo) {
-        putValue(tailer, logTailerInfo);
-        return this;
+    public void setTitle(String name) {
+        putValue(GroupInfo.title, name);
     }
 
 }

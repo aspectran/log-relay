@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.logrelay;
+package app.logrelay.appmon.logtail;
 
 import com.aspectran.utils.apon.AbstractParameters;
 import com.aspectran.utils.apon.ParameterKey;
@@ -22,40 +22,51 @@ import com.aspectran.utils.apon.ValueType;
 /**
  * <p>Created: 2020/02/12</p>
  */
-public class LogTailerInfo extends AbstractParameters {
+public class LogtailInfo extends AbstractParameters {
 
-    private static final ParameterKey name;
-    private static final ParameterKey file;
+    static final ParameterKey group;
+    static final ParameterKey name;
+    private static final ParameterKey title;
+    static final ParameterKey file;
     private static final ParameterKey charset;
     private static final ParameterKey sampleInterval;
-    private static final ParameterKey bufferSize;
     private static final ParameterKey lastLines;
-    private static final ParameterKey visualizer;
+    private static final ParameterKey visualizing;
 
     private static final ParameterKey[] parameterKeys;
 
     static {
+        group = new ParameterKey("group", ValueType.STRING);
         name = new ParameterKey("name", ValueType.STRING);
         file = new ParameterKey("file", ValueType.STRING);
+        title = new ParameterKey("title", ValueType.STRING);
         charset = new ParameterKey("charset", ValueType.STRING);
         sampleInterval = new ParameterKey("sampleInterval", ValueType.INT);
-        bufferSize = new ParameterKey("bufferSize", ValueType.INT);
         lastLines = new ParameterKey("lastLines", ValueType.INT);
-        visualizer = new ParameterKey("visualizer", ValueType.STRING);
+        visualizing = new ParameterKey("visualizing", ValueType.BOOLEAN);
 
         parameterKeys = new ParameterKey[] {
+                group,
                 name,
+                title,
                 file,
                 charset,
                 sampleInterval,
-                bufferSize,
                 lastLines,
-                visualizer
+                visualizing
         };
     }
 
-    public LogTailerInfo() {
+    public LogtailInfo() {
         super(parameterKeys);
+    }
+
+    public String getGroup() {
+        return getString(group);
+    }
+
+    public void setGroup(String group) {
+        putValue(LogtailInfo.group, group);
     }
 
     public String getName() {
@@ -63,7 +74,15 @@ public class LogTailerInfo extends AbstractParameters {
     }
 
     public void setName(String name) {
-        putValue(LogTailerInfo.name, name);
+        putValue(LogtailInfo.name, name);
+    }
+
+    public String getTitle() {
+        return getString(title);
+    }
+
+    public void setTitle(String title) {
+        putValue(LogtailInfo.title, title);
     }
 
     public String getFile() {
@@ -71,7 +90,7 @@ public class LogTailerInfo extends AbstractParameters {
     }
 
     public void setFile(String file) {
-        putValue(LogTailerInfo.file, file);
+        putValue(LogtailInfo.file, file);
     }
 
     public String getCharset() {
@@ -79,7 +98,7 @@ public class LogTailerInfo extends AbstractParameters {
     }
 
     public void setCharset(String charset) {
-        putValue(LogTailerInfo.charset, charset);
+        putValue(LogtailInfo.charset, charset);
     }
 
     public int getSampleInterval() {
@@ -87,15 +106,7 @@ public class LogTailerInfo extends AbstractParameters {
     }
 
     public void setSampleInterval(int sampleInterval) {
-        putValue(LogTailerInfo.sampleInterval, sampleInterval);
-    }
-
-    public int getBufferSize() {
-        return getInt(bufferSize, 0);
-    }
-
-    public void setBufferSize(int bufferSize) {
-        putValue(LogTailerInfo.bufferSize, bufferSize);
+        putValue(LogtailInfo.sampleInterval, sampleInterval);
     }
 
     public int getLastLines() {
@@ -103,15 +114,15 @@ public class LogTailerInfo extends AbstractParameters {
     }
 
     public void setLastLines(int lastLines) {
-        putValue(LogTailerInfo.lastLines, lastLines);
+        putValue(LogtailInfo.lastLines, lastLines);
     }
 
-    public String getVisualizer() {
-        return getString(visualizer);
+    public boolean isVisualizing() {
+        return getBoolean(visualizing, false);
     }
 
-    public void setVisualizer(String visualizer) {
-        putValue(LogTailerInfo.visualizer, visualizer);
+    public void setVisualizing(boolean visualizing) {
+        putValue(LogtailInfo.visualizing, visualizing);
     }
 
 }
