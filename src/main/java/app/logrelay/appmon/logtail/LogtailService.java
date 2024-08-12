@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.logrelay;
+package app.logrelay.appmon.logtail;
 
+import com.aspectran.utils.ToStringBuilder;
 import com.aspectran.utils.annotation.jsr305.NonNull;
 import com.aspectran.utils.lifecycle.AbstractLifeCycle;
 import com.aspectran.utils.logging.Logger;
@@ -30,112 +31,60 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LogTailer extends AbstractLifeCycle {
+public class LogtailService extends AbstractLifeCycle {
 
-    private static final Logger logger = LoggerFactory.getLogger(LogTailer.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogtailService.class);
+
+    private static final String LABEL_LOGTAIL = "logtail";
 
     private static final Charset DEFAULT_CHARSET = Charset.defaultCharset();
 
     private static final int DEFAULT_SAMPLE_INTERVAL = 1000;
 
-    private static final int DEFAULT_BUFFER_SIZE = 4096;
+    private final LogtailManager manager;
 
-    private final String name;
+    private final LogtailInfo info;
 
-    /** the log file to tail */
-    private final String file;
+    private final String label;
 
     /** the Charset to be used for reading the file */
     private final Charset charset;
 
     /** how frequently to check for file changes; defaults to 1 second */
-    private int sampleInterval = DEFAULT_SAMPLE_INTERVAL;
+    private final int sampleInterval;
 
-    private int bufferSize = DEFAULT_BUFFER_SIZE;
+    private final int lastLines;
 
-    private int lastLines;
-
-    private String visualizerName;
-
-    private LogtailEndpoint endpoint;
-
-    private LogTailerListener tailerListener;
+    /** the log file to tail */
+    private final File logFile;
 
     private Tailer tailer;
 
-    public LogTailer(String name, String file) {
-        this(name, file, DEFAULT_CHARSET);
+    public LogtailService(LogtailManager manager, @NonNull LogtailInfo info, File logFile) {
+        this.manager = manager;
+        this.info = info;
+        this.label = info.getName() + ":" + LABEL_LOGTAIL;
+        this.charset = (info.getCharset() != null ? Charset.forName(info.getCharset()): DEFAULT_CHARSET);
+        this.sampleInterval = (info.getSampleInterval() > 0 ? info.getSampleInterval() : DEFAULT_SAMPLE_INTERVAL);
+        this.lastLines = info.getLastLines();
+        this.logFile = logFile;
     }
 
-    public LogTailer(String name, String file, String charset) {
-        this(name, file, (charset != null ? Charset.forName(charset) : null));
+    public LogtailInfo getInfo() {
+        return info;
     }
 
-    public LogTailer(String name, String file, Charset charset) {
-        this.name = name;
-        this.file = file;
-        this.charset = (charset == null ? DEFAULT_CHARSET : charset);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFile() {
-        return file;
-    }
-
-    public Charset getCharset() {
-        return charset;
-    }
-
-    public int getSampleInterval() {
-        return sampleInterval;
-    }
-
-    public void setSampleInterval(int sampleInterval) {
-        this.sampleInterval = (sampleInterval > 0 ? sampleInterval : DEFAULT_SAMPLE_INTERVAL);
-    }
-
-    public int getBufferSize() {
-        return bufferSize;
-    }
-
-    public void setBufferSize(int bufferSize) {
-        this.bufferSize = (bufferSize > 0 ? bufferSize : DEFAULT_BUFFER_SIZE);
-    }
-
-    public int getLastLines() {
-        return lastLines;
-    }
-
-    public void setLastLines(int lastLines) {
-        this.lastLines = lastLines;
-    }
-
-    public String getVisualizerName() {
-        return visualizerName;
-    }
-
-    public void setVisualizerName(String visualizerName) {
-        this.visualizerName = visualizerName;
-    }
-
-    public void setEndpoint(LogtailEndpoint endpoint) {
-        this.endpoint = endpoint;
-        this.tailerListener = new LogTailerListener(name, endpoint);
-    }
-
-    protected void readLastLines() {
+    void readLastLines() {
         if (lastLines > 0) {
             try {
-                File logFile = new File(file).getCanonicalFile();
-                String[] lines = readLastLines(logFile, lastLines);
-                for (String line : lines) {
-                    endpoint.broadcast(name + ":last:" + line);
+                if (logFile.exists()) {
+                    String[] lines = readLastLines(logFile, lastLines);
+                    for (String line : lines) {
+                        broadcast("last:" + line);
+                    }
                 }
             } catch (IOException e) {
-                logger.error("No such log file: " + file, e);
+                logger.error("Failed to read log file " + logFile, e);
             }
         }
     }
@@ -162,12 +111,9 @@ public class LogTailer extends AbstractLifeCycle {
 
     @Override
     protected void doStart() throws Exception {
-        if (tailerListener == null) {
-            throw new IllegalStateException("No TailerListener configured");
-        }
         tailer = Tailer.builder()
-                .setFile(new File(file))
-                .setTailerListener(tailerListener)
+                .setFile(logFile)
+                .setTailerListener(new LogTailerListener(this))
                 .setDelayDuration(Duration.ofMillis(sampleInterval))
                 .setTailFromEnd(true)
                 .get();
@@ -179,6 +125,19 @@ public class LogTailer extends AbstractLifeCycle {
             tailer.close();
             tailer = null;
         }
+    }
+
+    @Override
+    public String toString() {
+        if (isStopped()) {
+            return ToStringBuilder.toString(super.toString(), info);
+        } else {
+            return super.toString();
+        }
+    }
+
+    void broadcast(String msg) {
+        manager.broadcast(label, msg);
     }
 
 }

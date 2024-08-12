@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.logrelay;
+package app.logrelay.appmon.logtail;
 
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
 
 public class LogTailerListener implements TailerListener {
 
-    private final String tailerName;
+    private final LogtailService service;
 
-    private final LogtailEndpoint endpoint;
-
-    public LogTailerListener(String tailerName, LogtailEndpoint endpoint) {
-        this.tailerName = tailerName;
-        this.endpoint = endpoint;
-    }
-
-    public LogtailEndpoint getEndpoint() {
-        return endpoint;
+    public LogTailerListener(LogtailService service) {
+        this.service = service;
     }
 
     @Override
@@ -47,7 +40,7 @@ public class LogTailerListener implements TailerListener {
 
     @Override
     public void handle(String line) {
-        endpoint.broadcast(tailerName + ":" + line);
+        service.broadcast(line);
     }
 
     @Override

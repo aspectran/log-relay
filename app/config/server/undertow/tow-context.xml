@@ -20,7 +20,7 @@
           class="com.aspectran.undertow.server.servlet.TowServletContext"
           scope="prototype">
         <properties>
-            <item name="deploymentName">%{tow.context.root.name}.war</item>
+            <item name="deploymentName">%{tow.context.root.name}</item>
             <item name="contextPath">%{tow.context.root.path}</item>
             <item name="resourceManager">
                 <bean class="com.aspectran.undertow.server.handler.resource.TowResourceManager">
@@ -62,7 +62,7 @@
                 </bean>
                 <bean class="com.aspectran.undertow.server.servlet.TowServlet">
                     <arguments>
-                        <item>web-activity-servlet</item>
+                        <item>webActivityServlet</item>
                         <item>com.aspectran.web.servlet.WebActivityServlet</item>
                     </arguments>
                     <properties>
@@ -77,8 +77,8 @@
                 <bean class="com.aspectran.undertow.server.servlet.TowJasperInitializer">
                     <properties>
                         <item name="tldResources" type="array">
-                            <value>/webroot/WEB-INF/taglibs/</value>
                             <value>classpath:com/aspectran/web/support/tags/aspectran.tld</value>
+                            <value>%{tow.context.root.baseDir}/WEB-INF/taglibs/</value>
                         </item>
                     </properties>
                 </bean>
