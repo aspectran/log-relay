@@ -19,16 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class SessionStatusCollector implements StatusCollector {
+public class LocalSessionStatusCollector implements StatusCollector {
 
-    private static final Logger logger = LoggerFactory.getLogger(SessionStatusCollector.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocalSessionStatusCollector.class);
 
     private final SessionHandler sessionHandler;
 
     private SessionStatusPayload oldPayload;
 
-    public SessionStatusCollector(@NonNull StatusManager manager,
-                                  @NonNull StatusInfo info) {
+    public LocalSessionStatusCollector(@NonNull StatusManager manager,
+                                       @NonNull StatusInfo info) {
         TowServer towServer = manager.getBean(info.getSource());
         this.sessionHandler = towServer.getSessionHandler(info.getName());
     }

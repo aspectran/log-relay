@@ -145,10 +145,15 @@ public class AppMonManager extends InstantActivitySupport {
         }
         List<String> unusedGroups = new ArrayList<>(joinedGroups.length);
         for (String name : joinedGroups) {
+            boolean using = false;
             for (AppMonEndpoint endpoint : endpoints) {
-                if (!endpoint.isUsingGroup(name)) {
-                    unusedGroups.add(name);
+                if (endpoint.isUsingGroup(name)) {
+                    using = true;
+                    break;
                 }
+            }
+            if (!using) {
+                unusedGroups.add(name);
             }
         }
         if (!unusedGroups.isEmpty()) {

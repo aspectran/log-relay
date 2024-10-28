@@ -61,16 +61,16 @@ public class PollingAppMonService extends AbstractComponent {
     }
 
     public void push(String line) {
-        buffer.push(line);
+        if (!sessions.isEmpty()) {
+            buffer.push(line);
+        }
     }
 
     public String[] pull(PollingAppMonSession session) {
         String[] lines = buffer.pop(session);
-
         if (lines != null && lines.length > 0) {
             shrinkBuffer();
         }
-
         return lines;
     }
 

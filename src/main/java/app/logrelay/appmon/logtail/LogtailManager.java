@@ -78,13 +78,11 @@ public class LogtailManager {
     }
 
     private void start(@NonNull LogtailService service) {
-        service.readLastLines();
-        if (!service.isRunning()) {
-            try {
-                service.start();
-            } catch (Exception e) {
-                logger.warn(e);
-            }
+        //service.readLastLines();
+        try {
+            service.start();
+        } catch (Exception e) {
+            logger.warn(e);
         }
     }
 
@@ -96,12 +94,6 @@ public class LogtailManager {
                         if (service.getInfo().getGroup().equals(group) && service.isRunning()) {
                             stop(service);
                         }
-                    }
-                }
-            } else {
-                for (LogtailService service : logtailServices.values()) {
-                    if (service.isRunning()) {
-                        stop(service);
                     }
                 }
             }

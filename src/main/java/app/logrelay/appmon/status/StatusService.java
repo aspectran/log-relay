@@ -53,6 +53,10 @@ public class StatusService extends AbstractLifeCycle {
         return name;
     }
 
+    public void refresh() {
+        collector.init();
+    }
+
     private void broadcast() {
         String data = collector.collect();
         if (data != null) {
@@ -74,7 +78,7 @@ public class StatusService extends AbstractLifeCycle {
                     broadcast();
                 }
             }, 0, sampleInterval);
-            collector.init();
+            refresh();
             broadcast();
         }
     }

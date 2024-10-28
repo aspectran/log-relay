@@ -80,7 +80,11 @@ public class StatusManager {
 
     private void start(StatusService service) {
         try {
-            service.start();
+            if (service.isRunning()) {
+                service.refresh();
+            } else {
+                service.start();
+            }
         } catch (Exception e) {
             logger.warn(e);
         }
@@ -91,15 +95,9 @@ public class StatusManager {
             if (unusedGroups != null) {
                 for (StatusService service : statusServices.values()) {
                     for (String group : unusedGroups) {
-                        if (service.getGroup().equals(group) && service.isRunning()) {
+                        if (service.getGroup().equals(group)) {
                             stop(service);
                         }
-                    }
-                }
-            } else {
-                for (StatusService service : statusServices.values()) {
-                    if (service.isRunning()) {
-                        stop(service);
                     }
                 }
             }
