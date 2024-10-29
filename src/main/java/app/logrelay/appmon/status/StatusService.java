@@ -1,5 +1,6 @@
 package app.logrelay.appmon.status;
 
+import app.apigateway.manager.appmon.status.StatusManager;
 import com.aspectran.utils.ToStringBuilder;
 import com.aspectran.utils.annotation.jsr305.NonNull;
 import com.aspectran.utils.lifecycle.AbstractLifeCycle;
@@ -11,7 +12,7 @@ public class StatusService extends AbstractLifeCycle {
 
     private static final int DEFAULT_SAMPLE_INTERVAL = 5000;
 
-    private static final String LABEL_STATUS = "status";
+    private static final String LABEL_STATUS = ":status:";
 
     private final StatusManager manager;
 
@@ -37,7 +38,7 @@ public class StatusService extends AbstractLifeCycle {
         this.group = info.getGroup();
         this.name = info.getName();
         this.collector = collector;
-        this.label = this.name + ":" + LABEL_STATUS + ":" + info.getLabel();
+        this.label = this.name + LABEL_STATUS + info.getLabel() + ":";
         this.sampleInterval = (info.getSampleInterval() > 0 ? info.getSampleInterval() : DEFAULT_SAMPLE_INTERVAL);
     }
 
@@ -60,7 +61,7 @@ public class StatusService extends AbstractLifeCycle {
     private void broadcast() {
         String data = collector.collect();
         if (data != null) {
-            manager.broadcast(label, data);
+            manager.broadcast(label + data);
         }
     }
 

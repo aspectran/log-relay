@@ -15,7 +15,8 @@
  */
 package app.logrelay.appmon.logtail;
 
-import app.logrelay.appmon.AppMonSession;
+import app.apigateway.manager.appmon.AppMonSession;
+import app.apigateway.manager.appmon.logtail.LogtailManager;
 import com.aspectran.utils.ToStringBuilder;
 import com.aspectran.utils.annotation.jsr305.NonNull;
 import com.aspectran.utils.lifecycle.AbstractLifeCycle;
@@ -36,7 +37,7 @@ public class LogtailService extends AbstractLifeCycle {
 
     private static final Logger logger = LoggerFactory.getLogger(LogtailService.class);
 
-    private static final String LABEL_LOGTAIL = ":logtail";
+    private static final String LABEL_LOGTAIL = ":logtail:";
 
     private static final String LABEL_LAST = "last:";
 
@@ -77,13 +78,13 @@ public class LogtailService extends AbstractLifeCycle {
         return info;
     }
 
-    void readLastLines(@NonNull AppMonSession session) {
-        if (lastLines > 0 && session.isTwoWay()) {
+    void readLastLines(@NonNull List<String> messages) {
+        if (lastLines > 0) {
             try {
                 if (logFile.exists()) {
-                    String[] lines = readLastLines(logFile, lastLines);
-                    for (String line : lines) {
-                        broadcast(session, LABEL_LAST + line);
+                    List<String> lines = readLastLines(logFile, lastLines);
+                    if (!lines.isEmpty()) {
+                        messages.addAll(lines);
                     }
                 }
             } catch (IOException e) {
@@ -93,7 +94,7 @@ public class LogtailService extends AbstractLifeCycle {
     }
 
     @NonNull
-    private String[] readLastLines(File file, int lastLines) throws IOException {
+    private List<String> readLastLines(File file, int lastLines) throws IOException {
         List<String> list = new ArrayList<>();
         try (ReversedLinesFileReader reversedLinesFileReader = ReversedLinesFileReader.builder()
                 .setFile(file)
@@ -105,11 +106,11 @@ public class LogtailService extends AbstractLifeCycle {
                 if (line == null) {
                     break;
                 }
-                list.add(line);
+                list.add(label + LABEL_LAST + line);
             }
             Collections.reverse(list);
         }
-        return list.toArray(new String[0]);
+        return list;
     }
 
     @Override
@@ -140,11 +141,11 @@ public class LogtailService extends AbstractLifeCycle {
     }
 
     void broadcast(String message) {
-        manager.broadcast(label, message);
+        manager.broadcast(label + message);
     }
 
     void broadcast(AppMonSession session, String message) {
-        manager.broadcast(session, label, message);
+        manager.broadcast(session, label + message);
     }
 
 }

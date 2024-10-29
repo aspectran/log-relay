@@ -28,7 +28,6 @@ public class WebsocketAppMonSession implements AppMonSession {
     public void saveJoinedGroups(String[] joinGroups) {
         Assert.notEmpty(joinGroups, "joinGroups must not be null or empty");
         session.getUserProperties().put(JOINED_GROUPS_PROPERTY, joinGroups);
-
     }
 
     @Override

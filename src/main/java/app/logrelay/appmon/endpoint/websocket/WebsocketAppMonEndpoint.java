@@ -19,7 +19,6 @@ import app.logrelay.appmon.AppMonEndpoint;
 import app.logrelay.appmon.AppMonManager;
 import app.logrelay.appmon.AppMonSession;
 import app.logrelay.appmon.group.GroupInfo;
-import app.logrelay.appmon.group.GroupManager;
 import app.logrelay.appmon.logtail.LogtailInfo;
 import app.logrelay.appmon.status.StatusInfo;
 import com.aspectran.core.component.bean.annotation.Autowired;
@@ -138,31 +137,30 @@ public class WebsocketAppMonEndpoint implements AppMonEndpoint {
     private void addSession(Session session, String message) throws IOException {
         WebsocketAppMonSession appMonSession = new WebsocketAppMonSession(session);
         if (sessions.add(appMonSession)) {
-            String[] joinGroups = StringUtils.splitCommaDelimitedString(message);
-            List<GroupInfo> groupInfoList = sendJoined(session, joinGroups);
-            if (!groupInfoList.isEmpty()) {
-                String[] groupNames = GroupManager.extractGroupNames(groupInfoList);
-                appMonSession.saveJoinedGroups(groupNames);
-            }
+            String[] joinGroups = appMonManager.getVerifiedGroupNames(StringUtils.splitCommaDelimitedString(message));
+            appMonSession.saveJoinedGroups(joinGroups);
+            sendJoined(appMonSession);
         }
     }
 
-    private List<GroupInfo> sendJoined(@NonNull Session session, String[] joinGroups) throws IOException {
-        List<GroupInfo> groups = appMonManager.getGroupInfoList(joinGroups);
-        List<LogtailInfo> logtails = appMonManager.getLogtailInfoList(joinGroups);
-        List<StatusInfo> statuses = appMonManager.getStatusInfoList(joinGroups);
+    private void sendJoined(@NonNull AppMonSession appMonSession) throws IOException {
+        List<GroupInfo> groups = appMonManager.getGroupInfoList(appMonSession.getJoinedGroups());
+        List<LogtailInfo> logtails = appMonManager.getLogtailInfoList(appMonSession.getJoinedGroups());
+        List<StatusInfo> statuses = appMonManager.getStatusInfoList(appMonSession.getJoinedGroups());
+        List<String> messages = appMonManager.getLastMessages(appMonSession);
         JsonWriter jsonWriter = new JsonWriter().nullWritable(false);
         jsonWriter.beginObject();
         jsonWriter.writeName("groups").write(groups);
         jsonWriter.writeName("logtails").write(logtails);
         jsonWriter.writeName("statuses").write(statuses);
+        jsonWriter.writeName("messages").write(messages);
         jsonWriter.endObject();
-        session.getAsyncRemote().sendText(MESSAGE_JOINED + jsonWriter);
-        return groups;
+        broadcast(appMonSession, MESSAGE_JOINED + jsonWriter);
     }
 
     private void establishComplete(@NonNull Session session) {
-        appMonManager.join(new WebsocketAppMonSession(session));
+        AppMonSession appMonSession = new WebsocketAppMonSession(session);
+        appMonManager.join(appMonSession);
     }
 
     private void removeSession(Session session) {

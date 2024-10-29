@@ -63,11 +63,15 @@ function AppMonBuilder() {
                 $("ul.speed-options").show();
             }
         }
-        function onEstablishCompleted() {
+        function onEstablishCompleted(endpoint, payload) {
             if (endpointIndex < endpoints.length - 1) {
                 establishEndpoint(++endpointIndex);
             } else if (endpointIndex === endpoints.length - 1) {
                 build();
+                for (let key in payload.messages) {
+                    let msg = payload.messages[key];
+                    endpoint.viewer.printMessage(msg);
+                }
                 if (location.hash) {
                     let name = location.hash.substring(1);
                     $(".endpoint-box[data-index=" + endpointIndex + "] .tabs-title.available").each(function () {
@@ -89,7 +93,7 @@ function AppMonBuilder() {
         }
 
         let endpoint = endpoints[endpointIndex];
-        endpoint['viewer'] = new AppmonViewer();
+        endpoint['viewer'] = new AppmonViewer(endpoint);
         let client = new AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted, onErrorObserved);
         endpoint['client'] = client;
         client.start();

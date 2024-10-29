@@ -60,21 +60,39 @@ public class LogtailManager {
         return infoList;
     }
 
-    public void join(String[] joinGroups, AppMonSession session) {
+    public void join(AppMonSession session) {
         if (!logtailServices.isEmpty()) {
+            String[] joinGroups = session.getJoinedGroups();
             if (joinGroups != null && joinGroups.length > 0) {
                 for (LogtailService service : logtailServices.values()) {
                     for (String group : joinGroups) {
                         if (service.getInfo().getGroup().equals(group)) {
-                            service.readLastLines(session);
                             start(service);
                         }
                     }
                 }
             } else {
                 for (LogtailService service : logtailServices.values()) {
-                    service.readLastLines(session);
                     start(service);
+                }
+            }
+        }
+    }
+
+    public void collectLastMessages(AppMonSession session, List<String> messages) {
+        if (!logtailServices.isEmpty()) {
+            String[] joinGroups = session.getJoinedGroups();
+            if (joinGroups != null && joinGroups.length > 0) {
+                for (LogtailService service : logtailServices.values()) {
+                    for (String group : joinGroups) {
+                        if (service.getInfo().getGroup().equals(group)) {
+                            service.readLastLines(messages);
+                        }
+                    }
+                }
+            } else {
+                for (LogtailService service : logtailServices.values()) {
+                    service.readLastLines(messages);
                 }
             }
         }
@@ -110,12 +128,12 @@ public class LogtailManager {
         }
     }
 
-    void broadcast(String name, String message) {
-        appMonManager.broadcast(name + ":" + message);
+    void broadcast(String message) {
+        appMonManager.broadcast(message);
     }
 
-    void broadcast(AppMonSession session, String name, String message) {
-        appMonManager.broadcast(session, name + ":" + message);
+    void broadcast(AppMonSession session, String message) {
+        appMonManager.broadcast(session, message);
     }
 
 }

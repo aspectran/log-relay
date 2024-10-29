@@ -16,6 +16,7 @@
 package app.logrelay.appmon.status;
 
 import app.logrelay.appmon.AppMonManager;
+import app.logrelay.appmon.AppMonSession;
 import com.aspectran.core.context.ActivityContext;
 import com.aspectran.utils.annotation.jsr305.NonNull;
 import com.aspectran.utils.logging.Logger;
@@ -60,8 +61,9 @@ public class StatusManager {
         return infoList;
     }
 
-    public void join(String[] joinGroups) {
+    public void join(AppMonSession session) {
         if (!statusServices.isEmpty()) {
+            String[] joinGroups = session.getJoinedGroups();
             if (joinGroups != null && joinGroups.length > 0) {
                 for (StatusService service : statusServices.values()) {
                     for (String group : joinGroups) {
@@ -120,8 +122,8 @@ public class StatusManager {
         return getActivityContext().getBeanRegistry().getBean(id);
     }
 
-    public void broadcast(String name, String msg) {
-        appMonManager.broadcast(name + ":" + msg);
+    public void broadcast(String message) {
+        appMonManager.broadcast(message);
     }
 
 }

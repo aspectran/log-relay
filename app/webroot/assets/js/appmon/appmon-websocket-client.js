@@ -13,6 +13,8 @@ function AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted,
     }
 
     const openSocket = function () {
+        // onErrorObserved();
+        // return;
         if (socket) {
             socket.close();
         }
@@ -71,8 +73,14 @@ function AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted,
             endpoint['mode'] = "websocket";
             onEndpointJoined(endpoint, payload);
         }
+        if (pendingMessages && pendingMessages.length > 0) {
+            for (let key in pendingMessages) {
+                endpoint.viewer.printEventMessage(pendingMessages[key]);
+            }
+            pendingMessages = null;
+        }
         if (onEstablishCompleted) {
-            onEstablishCompleted();
+            onEstablishCompleted(endpoint, payload);
         }
         if (pendingMessages && pendingMessages.length > 0) {
             for (let key in pendingMessages) {
