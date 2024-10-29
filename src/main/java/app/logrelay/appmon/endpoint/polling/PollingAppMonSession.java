@@ -66,6 +66,11 @@ public class PollingAppMonSession implements AppMonSession {
         this.joinedGroups = null;
     }
 
+    @Override
+    public boolean isTwoWay() {
+        return false;
+    }
+
     public int getLastLineIndex() {
         return lastLineIndex;
     }

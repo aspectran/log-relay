@@ -17,6 +17,7 @@ package app.logrelay.appmon.endpoint.websocket;
 
 import app.logrelay.appmon.AppMonEndpoint;
 import app.logrelay.appmon.AppMonManager;
+import app.logrelay.appmon.AppMonSession;
 import app.logrelay.appmon.group.GroupInfo;
 import app.logrelay.appmon.group.GroupManager;
 import app.logrelay.appmon.logtail.LogtailInfo;
@@ -174,11 +175,22 @@ public class WebsocketAppMonEndpoint implements AppMonEndpoint {
     @Override
     public void broadcast(String message) {
         synchronized (sessions) {
-            for (WebsocketAppMonSession appMonSession : sessions) {
-                if (appMonSession.getSession().isOpen()) {
-                    appMonSession.getSession().getAsyncRemote().sendText(message);
-                }
+            for (WebsocketAppMonSession websocketAppMonSession : sessions) {
+                broadcast(websocketAppMonSession.getSession(), message);
             }
+        }
+    }
+
+    @Override
+    public void broadcast(@NonNull AppMonSession session, String message) {
+        if (session instanceof WebsocketAppMonSession websocketAppMonSession) {
+            broadcast(websocketAppMonSession.getSession(), message);
+        }
+    }
+
+    private void broadcast(@NonNull Session session, String message) {
+        if (session.isOpen()) {
+            session.getAsyncRemote().sendText(message);
         }
     }
 

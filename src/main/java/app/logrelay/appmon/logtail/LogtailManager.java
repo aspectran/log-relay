@@ -16,6 +16,7 @@
 package app.logrelay.appmon.logtail;
 
 import app.logrelay.appmon.AppMonManager;
+import app.logrelay.appmon.AppMonSession;
 import com.aspectran.utils.annotation.jsr305.NonNull;
 import com.aspectran.utils.logging.Logger;
 import com.aspectran.utils.logging.LoggerFactory;
@@ -59,18 +60,20 @@ public class LogtailManager {
         return infoList;
     }
 
-    public void join(String[] joinGroups) {
+    public void join(String[] joinGroups, AppMonSession session) {
         if (!logtailServices.isEmpty()) {
             if (joinGroups != null && joinGroups.length > 0) {
                 for (LogtailService service : logtailServices.values()) {
                     for (String group : joinGroups) {
                         if (service.getInfo().getGroup().equals(group)) {
+                            service.readLastLines(session);
                             start(service);
                         }
                     }
                 }
             } else {
                 for (LogtailService service : logtailServices.values()) {
+                    service.readLastLines(session);
                     start(service);
                 }
             }
@@ -78,7 +81,6 @@ public class LogtailManager {
     }
 
     private void start(@NonNull LogtailService service) {
-        //service.readLastLines();
         try {
             service.start();
         } catch (Exception e) {
@@ -108,8 +110,12 @@ public class LogtailManager {
         }
     }
 
-    void broadcast(String name, String msg) {
-        appMonManager.broadcast(name + ":" + msg);
+    void broadcast(String name, String message) {
+        appMonManager.broadcast(name + ":" + message);
+    }
+
+    void broadcast(AppMonSession session, String name, String message) {
+        appMonManager.broadcast(session, name + ":" + message);
     }
 
 }

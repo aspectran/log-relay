@@ -37,6 +37,11 @@ public class WebsocketAppMonSession implements AppMonSession {
     }
 
     @Override
+    public boolean isTwoWay() {
+        return true;
+    }
+
+    @Override
     public boolean isValid() {
         return session.isOpen();
     }

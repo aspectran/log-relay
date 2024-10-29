@@ -116,7 +116,7 @@ public class AppMonManager extends InstantActivitySupport {
     public synchronized boolean join(@NonNull AppMonSession session) {
         if (session.isValid()) {
             String[] joinGroups = session.getJoinedGroups();
-            logtailManager.join(joinGroups);
+            logtailManager.join(joinGroups, session);
             statusManager.join(joinGroups);
             return true;
         } else {
@@ -134,6 +134,12 @@ public class AppMonManager extends InstantActivitySupport {
     public void broadcast(String message) {
         for (AppMonEndpoint endpoint : endpoints) {
             endpoint.broadcast(message);
+        }
+    }
+
+    public void broadcast(AppMonSession session, String message) {
+        for (AppMonEndpoint endpoint : endpoints) {
+            endpoint.broadcast(session, message);
         }
     }
 

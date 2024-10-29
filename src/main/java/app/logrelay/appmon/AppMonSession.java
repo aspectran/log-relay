@@ -8,6 +8,8 @@ public interface AppMonSession {
 
     void removeJoinedGroups();
 
+    boolean isTwoWay();
+
     boolean isValid();
 
 }

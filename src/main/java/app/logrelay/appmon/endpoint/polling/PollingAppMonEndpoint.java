@@ -2,6 +2,7 @@ package app.logrelay.appmon.endpoint.polling;
 
 import app.logrelay.appmon.AppMonEndpoint;
 import app.logrelay.appmon.AppMonManager;
+import app.logrelay.appmon.AppMonSession;
 import app.logrelay.appmon.endpoint.EndpointInfo;
 import app.logrelay.appmon.endpoint.EndpointPollingConfig;
 import app.logrelay.appmon.group.GroupInfo;
@@ -126,6 +127,10 @@ public class PollingAppMonEndpoint implements AppMonEndpoint {
         if (appMonService != null) {
             appMonService.push(line);
         }
+    }
+
+    @Override
+    public void broadcast(AppMonSession session, String message) {
     }
 
     @Override
