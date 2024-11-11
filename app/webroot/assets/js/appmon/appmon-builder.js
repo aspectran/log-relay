@@ -16,8 +16,8 @@ function AppMonBuilder() {
                             endpoints.push(endpoint);
                         }
                     }
-                    for (let index = 0; index < endpoints.length; index++) {
-                        establishEndpoint(index);
+                    if (endpoints.length) {
+                        establishEndpoint(0);
                     }
                 }
             }
@@ -86,7 +86,7 @@ function AppMonBuilder() {
                 }
             }
         }
-        function onErrorObserved() {
+        function onErrorObserved(endpoint) {
             let client = new AppmonPollingClient(endpoint, onEndpointJoined, onEstablishCompleted);
             endpoint['client'] = client;
             client.start();
@@ -112,14 +112,7 @@ function AppMonBuilder() {
     }
 
     const build = function () {
-        $(".endpoint-box.available").hide().eq(0).show();
-        $(".endpoint-box.available .tabs .tabs-title.available").each(function() {
-            let endpointIndex = $(this).data("index");
-            let endpointBox = $(".endpoint-box.available").eq(endpointIndex);
-            let groupTab = endpointBox.find(".group.tabs .tabs-title.available").eq(0);
-            let groupName = groupTab.addClass("is-active").data("name");
-            changeGroup(endpointBox, groupName);
-        }).eq(0).addClass("is-active");
+        $(".endpoint.tabs .tabs-title.available").eq(0).addClass("is-active");
         $(".endpoint.tabs .tabs-title.available a").click(function() {
             $(".endpoint.tabs .tabs-title").removeClass("is-active");
             let tab = $(this).closest(".tabs-title");
@@ -133,6 +126,14 @@ function AppMonBuilder() {
                     endpoints[endpointIndex].viewer.refresh(logtail);
                 }
             }
+        });
+        $(".endpoint-box.available").hide().eq(0).show();
+        $(".endpoint-box.available .tabs .tabs-title.available").each(function() {
+            let endpointIndex = $(this).data("index");
+            let endpointBox = $(".endpoint-box.available").eq(endpointIndex);
+            let groupTab = endpointBox.find(".group.tabs .tabs-title.available").eq(0);
+            let groupName = groupTab.addClass("is-active").data("name");
+            changeGroup(endpointBox, groupName);
         });
         $(".group.tabs .tabs-title.available a").click(function() {
             let endpointBox = $(this).closest(".endpoint-box");

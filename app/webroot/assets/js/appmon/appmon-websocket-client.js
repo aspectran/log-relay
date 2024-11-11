@@ -51,7 +51,7 @@ function AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted,
         socket.onerror = function (event) {
             console.error("WebSocket error observed:", event);
             if (onErrorObserved) {
-                onErrorObserved();
+                onErrorObserved(endpoint);
             } else {
                 endpoint.viewer.printErrorMessage('Could not connect to WebSocket server');
                 setTimeout(function () {
