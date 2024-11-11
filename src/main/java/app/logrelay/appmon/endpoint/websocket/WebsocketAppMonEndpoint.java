@@ -147,19 +147,21 @@ public class WebsocketAppMonEndpoint implements AppMonEndpoint {
         List<GroupInfo> groups = appMonManager.getGroupInfoList(appMonSession.getJoinedGroups());
         List<LogtailInfo> logtails = appMonManager.getLogtailInfoList(appMonSession.getJoinedGroups());
         List<StatusInfo> statuses = appMonManager.getStatusInfoList(appMonSession.getJoinedGroups());
-        List<String> messages = appMonManager.getLastMessages(appMonSession);
         JsonWriter jsonWriter = new JsonWriter().nullWritable(false);
         jsonWriter.beginObject();
         jsonWriter.writeName("groups").write(groups);
         jsonWriter.writeName("logtails").write(logtails);
         jsonWriter.writeName("statuses").write(statuses);
-        jsonWriter.writeName("messages").write(messages);
         jsonWriter.endObject();
         broadcast(appMonSession, MESSAGE_JOINED + jsonWriter);
     }
 
     private void establishComplete(@NonNull Session session) {
         AppMonSession appMonSession = new WebsocketAppMonSession(session);
+        List<String> messages = appMonManager.getLastMessages(appMonSession);
+        for (String message : messages) {
+            broadcast(appMonSession, message);
+        }
         appMonManager.join(appMonSession);
     }
 
