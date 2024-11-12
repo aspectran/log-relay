@@ -1,6 +1,5 @@
 package app.logrelay.appmon.status;
 
-import app.apigateway.manager.appmon.status.StatusManager;
 import com.aspectran.utils.ToStringBuilder;
 import com.aspectran.utils.annotation.jsr305.NonNull;
 import com.aspectran.utils.lifecycle.AbstractLifeCycle;

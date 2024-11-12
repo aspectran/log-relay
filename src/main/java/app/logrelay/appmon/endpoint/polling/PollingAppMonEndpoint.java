@@ -2,6 +2,7 @@ package app.logrelay.appmon.endpoint.polling;
 
 import app.logrelay.appmon.AppMonEndpoint;
 import app.logrelay.appmon.AppMonManager;
+import app.logrelay.appmon.AppMonSession;
 import app.logrelay.appmon.endpoint.EndpointInfo;
 import app.logrelay.appmon.endpoint.EndpointPollingConfig;
 import app.logrelay.appmon.group.GroupInfo;

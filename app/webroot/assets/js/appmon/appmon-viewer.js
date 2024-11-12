@@ -3,6 +3,7 @@ function AppmonViewer() {
     let missileTracks = {};
     let indicators = {};
     let statuses = {};
+    let visible = false;
     let prevLogTime = null;
     let prevSentTime = new Date().getTime();
     let prevPosition = 0;
@@ -37,6 +38,15 @@ function AppmonViewer() {
 
     this.setStatus = function (name, status) {
         statuses[name] = status;
+    };
+
+    this.setVisible = function (flag) {
+        visible = !!flag;
+        if (!visible) {
+            for (let key in missileTracks) {
+                missileTracks[key].empty();
+            }
+        }
     };
 
     this.getLogtails = function () {
@@ -138,27 +148,33 @@ function AppmonViewer() {
     const indicate = function (name) {
         let indicatorArr = indicators[name];
         if (indicatorArr) {
+            let first = true;
             for (let key in indicatorArr) {
-                let indicator = indicatorArr[key];
-                if (!indicator.hasClass("on")) {
-                    indicator.addClass("blink on");
-                    setTimeout(function () {
-                        indicator.removeClass("blink on");
-                    }, 500);
+                if (first || visible) {
+                    let indicator = indicatorArr[key];
+                    if (!indicator.hasClass("on")) {
+                        indicator.addClass("blink on");
+                        setTimeout(function () {
+                            indicator.removeClass("blink on");
+                        }, 500);
+                    }
                 }
+                first = false;
             }
         }
     };
 
     const visualize = function (name, text) {
-        let missileTrack = missileTracks[name];
-        if (missileTrack) {
-            setTimeout(function () {
-                let visualizing = missileTrack.data("visualizing");
-                if (visualizing) {
-                    launchMissile(missileTrack, text);
-                }
-            }, 1);
+        if (visible) {
+            let missileTrack = missileTracks[name];
+            if (missileTrack) {
+                setTimeout(function () {
+                    let visualizing = missileTrack.data("visualizing");
+                    if (visualizing) {
+                        launchMissile(missileTrack, text);
+                    }
+                }, 1);
+            }
         }
     };
 

@@ -15,8 +15,7 @@
  */
 package app.logrelay.appmon.logtail;
 
-import app.apigateway.manager.appmon.AppMonSession;
-import app.apigateway.manager.appmon.logtail.LogtailManager;
+import app.logrelay.appmon.AppMonSession;
 import com.aspectran.utils.ToStringBuilder;
 import com.aspectran.utils.annotation.jsr305.NonNull;
 import com.aspectran.utils.lifecycle.AbstractLifeCycle;

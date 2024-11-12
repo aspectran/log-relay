@@ -65,7 +65,7 @@ function AppMonBuilder() {
         }
         function onEstablishCompleted(endpoint, payload) {
             if (endpointIndex < endpoints.length - 1) {
-                establishEndpoint(++endpointIndex);
+                establishEndpoint(endpointIndex + 1);
             } else if (endpointIndex === endpoints.length - 1) {
                 build();
                 for (let key in payload.messages) {
@@ -93,10 +93,25 @@ function AppMonBuilder() {
         }
 
         let endpoint = endpoints[endpointIndex];
-        endpoint['viewer'] = new AppmonViewer(endpoint);
+        endpoint['viewer'] = new AppmonViewer();
         let client = new AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted, onErrorObserved);
         endpoint['client'] = client;
         client.start();
+    }
+
+    const changeEndpoint = function (endpointIndex) {
+        for (let key in endpoints) {
+            endpoints[key].viewer.setVisible(false);
+        }
+        $(".endpoint-box.available").hide().eq(endpointIndex).show();
+        endpoints[endpointIndex].viewer.setVisible(true);
+        let logtails = endpoints[endpointIndex].viewer.getLogtails();
+        for (let key in logtails) {
+            let logtail = logtails[key];
+            if (!logtail.data("pause")) {
+                endpoints[endpointIndex].viewer.refresh(logtail);
+            }
+        }
     }
 
     const changeGroup = function (endpointBox, groupName) {
@@ -112,22 +127,17 @@ function AppMonBuilder() {
     }
 
     const build = function () {
+        if (endpoints.length) {
+            changeEndpoint(0);
+        }
         $(".endpoint.tabs .tabs-title.available").eq(0).addClass("is-active");
         $(".endpoint.tabs .tabs-title.available a").click(function() {
             $(".endpoint.tabs .tabs-title").removeClass("is-active");
             let tab = $(this).closest(".tabs-title");
-            let endpointIndex = tab.data("index");
             tab.addClass("is-active");
-            $(".endpoint-box.available").hide().eq(endpointIndex).show();
-            let logtails = endpoints[endpointIndex].viewer.getLogtails();
-            for (let key in logtails) {
-                let logtail = logtails[key];
-                if (!logtail.data("pause")) {
-                    endpoints[endpointIndex].viewer.refresh(logtail);
-                }
-            }
+            let endpointIndex = tab.data("index");
+            changeEndpoint(endpointIndex);
         });
-        $(".endpoint-box.available").hide().eq(0).show();
         $(".endpoint-box.available .tabs .tabs-title.available").each(function() {
             let endpointIndex = $(this).data("index");
             let endpointBox = $(".endpoint-box.available").eq(endpointIndex);
@@ -136,14 +146,22 @@ function AppMonBuilder() {
             changeGroup(endpointBox, groupName);
         });
         $(".group.tabs .tabs-title.available a").click(function() {
-            let endpointBox = $(this).closest(".endpoint-box");
             let groupTab = $(this).closest(".tabs-title");
             let groupName = groupTab.data("name");
-            if (!groupTab.hasClass("is-active")) {
-                endpointBox.find(".group.tabs .tabs-title").removeClass("is-active");
-                groupTab.addClass("is-active");
-                changeGroup(endpointBox, groupName);
-            }
+            $(".endpoint-box.available").each(function () {
+                let endpointBox2 = $(this);
+                $(endpointBox2).find(".group.tabs .tabs-title.available").each(function () {
+                    let groupTab = $(this);
+                    if (groupTab.data("name") === groupName) {
+                        if (!groupTab.hasClass("is-active")) {
+                            groupTab.addClass("is-active");
+                            changeGroup(endpointBox2, groupName);
+                        }
+                    } else {
+                        groupTab.removeClass("is-active");
+                    }
+                });
+            });
         });
         $(".logtail-box .tailing-switch").click(function() {
             let logtail = $(this).closest(".logtail-box").find(".logtail");
