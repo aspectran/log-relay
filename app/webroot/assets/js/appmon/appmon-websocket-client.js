@@ -13,7 +13,7 @@ function AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted,
     }
 
     const openSocket = function () {
-        // onErrorObserved();
+        // onErrorObserved(endpoint);
         // return;
         if (socket) {
             socket.close();
@@ -55,7 +55,7 @@ function AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted,
             } else {
                 endpoint.viewer.printErrorMessage('Could not connect to WebSocket server');
                 setTimeout(function () {
-                    self.openSocket();
+                    openSocket();
                 }, 60000);
             }
         };
@@ -73,20 +73,14 @@ function AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted,
             endpoint['mode'] = "websocket";
             onEndpointJoined(endpoint, payload);
         }
-        if (pendingMessages && pendingMessages.length > 0) {
-            for (let key in pendingMessages) {
-                endpoint.viewer.printEventMessage(pendingMessages[key]);
-            }
-            pendingMessages = null;
+        while (pendingMessages.length) {
+            endpoint.viewer.printEventMessage(pendingMessages.shift());
         }
         if (onEstablishCompleted) {
             onEstablishCompleted(endpoint, payload);
         }
-        if (pendingMessages && pendingMessages.length > 0) {
-            for (let key in pendingMessages) {
-                endpoint.viewer.printEventMessage(pendingMessages[key]);
-            }
-            pendingMessages = null;
+        while (pendingMessages.length) {
+            endpoint.viewer.printEventMessage(pendingMessages.shift());
         }
         established = true;
         socket.send("established:");
@@ -96,12 +90,9 @@ function AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted,
         if (heartbeatTimer) {
             clearTimeout(heartbeatTimer);
         }
-        let self = this;
         heartbeatTimer = setTimeout(function () {
             if (socket) {
                 socket.send("--ping--");
-                heartbeatTimer = null;
-                heartbeatPing();
             }
         }, 57000);
     };
