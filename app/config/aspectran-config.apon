@@ -112,6 +112,5 @@ web: {
     legacyHeadHandling: true
     acceptables: {
         +: /**
-        -: /favicon.ico
     }
 }
