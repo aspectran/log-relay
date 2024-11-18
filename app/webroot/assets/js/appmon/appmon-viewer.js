@@ -287,7 +287,7 @@ function AppmonViewer() {
             case "session":
                 printSessionStatus(name, data);
         }
-    }
+    };
 
     const printSessionStatus = function (name, data) {
         let status = getStatus(name);

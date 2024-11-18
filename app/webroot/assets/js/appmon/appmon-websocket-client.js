@@ -6,11 +6,11 @@ function AppmonWebsocketClient(endpoint, onEndpointJoined, onEstablishCompleted,
 
     this.start = function () {
         openSocket();
-    }
+    };
 
     this.stop = function () {
         closeSocket();
-    }
+    };
 
     const openSocket = function () {
         // onErrorObserved(endpoint);

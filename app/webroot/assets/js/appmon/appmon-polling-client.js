@@ -2,11 +2,11 @@ function AppmonPollingClient(endpoint, onEndpointJoined, onEstablishCompleted) {
 
     this.start = function () {
         join();
-    }
+    };
 
     this.speed = function (speed) {
         changePollingInterval(speed);
-    }
+    };
 
     const join = function () {
         $.ajax({
@@ -28,14 +28,14 @@ function AppmonPollingClient(endpoint, onEndpointJoined, onEstablishCompleted) {
                 }
             }
         });
-    }
+    };
 
     const rejoin = function () {
         endpoint.viewer.printErrorMessage("Connection lost. It will retry in 5 seconds.");
         setTimeout(function () {
             location.reload();
         }, 5000)
-    }
+    };
 
     const polling = function () {
         $.ajax({
@@ -52,7 +52,7 @@ function AppmonPollingClient(endpoint, onEndpointJoined, onEstablishCompleted) {
                 }
             }
         });
-    }
+    };
 
     const changePollingInterval = function (speed) {
         $.ajax({
@@ -70,6 +70,6 @@ function AppmonPollingClient(endpoint, onEndpointJoined, onEstablishCompleted) {
                 }
             }
         });
-    }
+    };
 
 }
