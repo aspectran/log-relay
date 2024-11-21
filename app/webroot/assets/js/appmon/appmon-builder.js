@@ -43,6 +43,7 @@ function AppMonBuilder() {
                     endpoint.viewer.printMessage(msg);
                 }
                 if (endpoints.length) {
+                    changeEndpoint(0);
                     if (location.hash) {
                         let name = location.hash.substring(1);
                         let endpointBox = $(".endpoint-box.available").eq(0);
@@ -54,8 +55,6 @@ function AppMonBuilder() {
                             }
                         });
                         changeGroup(endpointBox, name);
-                    } else {
-                        changeEndpoint(0);
                     }
                 }
             }
