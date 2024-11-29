@@ -23,7 +23,7 @@ public abstract class StatusManagerBuilder {
         StatusManager statusManager = new StatusManager(appMonManager);
         for (StatusInfo statusInfo : statusConfig.getStatusInfoList()) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Create StatusService " + ToStringBuilder.toString(statusInfo));
+                logger.debug(ToStringBuilder.toString("Create StatusService", statusInfo));
             }
             validateRequiredParameter(statusInfo, StatusInfo.group);
             validateRequiredParameter(statusInfo, StatusInfo.name);

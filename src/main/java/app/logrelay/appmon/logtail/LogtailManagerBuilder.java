@@ -25,7 +25,7 @@ public abstract class LogtailManagerBuilder {
         LogtailManager logtailManager = new LogtailManager(appMonManager);
         for (LogtailInfo logTailInfo : logTailConfig.getLogTailInfoList()) {
             if (logger.isDebugEnabled()) {
-                logger.debug("Create LogtailService " + ToStringBuilder.toString(logTailInfo));
+                logger.debug(ToStringBuilder.toString("Create LogtailService", logTailInfo));
             }
             validateRequiredParameter(logTailInfo, LogtailInfo.group);
             validateRequiredParameter(logTailInfo, LogtailInfo.name);
