@@ -13,7 +13,7 @@ function AppMonBuilder() {
                     let index = 0;
                     for (let key in data) {
                         let endpoint = data[key];
-                        endpoint['index'] = index;
+                        endpoint['index'] = index++;
                         endpoint['basePath'] = basePath;
                         if (!currentEndpoint || currentEndpoint === endpoint.name) {
                             endpoints.push(endpoint);
