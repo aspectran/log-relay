@@ -46,7 +46,7 @@ shell: {
         |{{CYAN  }} /_____/\____/\__, /  /_/ |_|\___/_/\__,_/\__, /\___/_/
         |{{CYAN  }}============ /____/ ==================== /____/ =============
         |{{reset }}
-        |{{RED   }}Welcome To Log Relay #{class:com.aspectran.core.util.Aspectran^version}
+        |{{RED   }}Welcome To Log Relay #{class:com.aspectran.core.Aspectran^version}
         |{{reset }}
         |If you want a list of all supported built-in commands, type '{{GREEN}}help{{reset}}'.
         |To get help on a specific command, type '{{GREEN}}command_name -h{{reset}}'.
