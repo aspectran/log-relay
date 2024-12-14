@@ -15,9 +15,8 @@
  */
 package app.logrelay.appmon.status.session;
 
-import com.aspectran.utils.json.JsonWriter;
+import com.aspectran.utils.json.JsonBuilder;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -124,10 +123,10 @@ public class SessionStatusPayload {
         return Arrays.equals(stats.currentSessions, currentSessions);
     }
 
-    public String toJson() throws IOException {
-        return new JsonWriter()
+    public String toJson() {
+        return new JsonBuilder()
                 .prettyPrint(false)
-                .write(this)
+                .put(this)
                 .toString();
     }
 

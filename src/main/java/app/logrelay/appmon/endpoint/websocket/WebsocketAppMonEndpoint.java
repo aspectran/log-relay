@@ -27,7 +27,7 @@ import com.aspectran.core.component.bean.annotation.Component;
 import com.aspectran.core.component.bean.annotation.Initialize;
 import com.aspectran.utils.StringUtils;
 import com.aspectran.utils.annotation.jsr305.NonNull;
-import com.aspectran.utils.json.JsonWriter;
+import com.aspectran.utils.json.JsonBuilder;
 import com.aspectran.utils.logging.Logger;
 import com.aspectran.utils.logging.LoggerFactory;
 import com.aspectran.utils.security.InvalidPBTokenException;
@@ -101,7 +101,7 @@ public class WebsocketAppMonEndpoint implements AppMonEndpoint {
     }
 
     @OnMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) {
         if (HEARTBEAT_PING_MSG.equals(message)) {
             session.getAsyncRemote().sendText(HEARTBEAT_PONG_MSG);
             return;
@@ -134,7 +134,7 @@ public class WebsocketAppMonEndpoint implements AppMonEndpoint {
         }
     }
 
-    private void addSession(Session session, String message) throws IOException {
+    private void addSession(Session session, String message) {
         WebsocketAppMonSession appMonSession = new WebsocketAppMonSession(session);
         if (sessions.add(appMonSession)) {
             String[] joinGroups = appMonManager.getVerifiedGroupNames(StringUtils.splitCommaDelimitedString(message));
@@ -143,17 +143,18 @@ public class WebsocketAppMonEndpoint implements AppMonEndpoint {
         }
     }
 
-    private void sendJoined(@NonNull AppMonSession appMonSession) throws IOException {
+    private void sendJoined(@NonNull AppMonSession appMonSession) {
         List<GroupInfo> groups = appMonManager.getGroupInfoList(appMonSession.getJoinedGroups());
         List<LogtailInfo> logtails = appMonManager.getLogtailInfoList(appMonSession.getJoinedGroups());
         List<StatusInfo> statuses = appMonManager.getStatusInfoList(appMonSession.getJoinedGroups());
-        JsonWriter jsonWriter = new JsonWriter().nullWritable(false);
-        jsonWriter.beginObject();
-        jsonWriter.writeName("groups").write(groups);
-        jsonWriter.writeName("logtails").write(logtails);
-        jsonWriter.writeName("statuses").write(statuses);
-        jsonWriter.endObject();
-        broadcast(appMonSession, MESSAGE_JOINED + jsonWriter);
+        String json = new JsonBuilder().nullWritable(false)
+                .object()
+                    .put("groups", groups)
+                    .put("logtails", logtails)
+                    .put("statuses", statuses)
+                .endObject()
+                .toString();
+        broadcast(appMonSession, MESSAGE_JOINED + json);
     }
 
     private void establishComplete(@NonNull Session session) {
