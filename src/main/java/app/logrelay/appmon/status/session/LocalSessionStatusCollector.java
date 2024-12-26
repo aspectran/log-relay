@@ -44,12 +44,12 @@ public class LocalSessionStatusCollector implements StatusCollector {
             SessionStatistics statistics = sessionHandler.getStatistics();
 
             SessionStatusPayload payload = new SessionStatusPayload();
-            payload.setCreatedSessionCount(statistics.getCreatedSessions());
-            payload.setExpiredSessionCount(statistics.getExpiredSessions());
-            payload.setActiveSessionCount(statistics.getActiveSessions());
-            payload.setHighestActiveSessionCount(statistics.getHighestActiveSessions());
-            payload.setEvictedSessionCount(statistics.getEvictedSessions());
-            payload.setRejectedSessionCount(statistics.getRejectedSessions());
+            payload.setCreatedSessionCount(statistics.getNumberOfCreated());
+            payload.setExpiredSessionCount(statistics.getNumberOfExpired());
+            payload.setActiveSessionCount(statistics.getNumberOfActives());
+            payload.setHighestActiveSessionCount(statistics.getHighestNumberOfActives());
+            payload.setEvictedSessionCount(statistics.getNumberOfUnmanaged());
+            payload.setRejectedSessionCount(statistics.getNumberOfRejected());
             payload.setElapsedTime(formatDuration(statistics.getStartTime()));
             payload.setCurrentSessions(getCurrentSessions());
 
