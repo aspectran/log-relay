@@ -3,7 +3,7 @@ package app.logrelay.appmon.status.session;
 import app.logrelay.appmon.status.StatusCollector;
 import app.logrelay.appmon.status.StatusInfo;
 import app.logrelay.appmon.status.StatusManager;
-import com.aspectran.core.component.session.DefaultSession;
+import com.aspectran.core.component.session.ManagedSession;
 import com.aspectran.core.component.session.SessionHandler;
 import com.aspectran.core.component.session.SessionStatistics;
 import com.aspectran.undertow.server.TowServer;
@@ -70,7 +70,7 @@ public class LocalSessionStatusCollector implements StatusCollector {
         Set<String> sessionIds = sessionHandler.getActiveSessions();
         List<String> currentSessions = new ArrayList<>(sessionIds.size());
         for (String sessionId : sessionIds) {
-            DefaultSession session = sessionHandler.getSession(sessionId);
+            ManagedSession session = sessionHandler.getSession(sessionId);
             if (session != null) {
                 String loggedIn = "0";
                 String username = "";
