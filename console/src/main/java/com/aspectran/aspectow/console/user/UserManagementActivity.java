@@ -182,7 +182,8 @@ public class UserManagementActivity {
                  return new FailureResponse().setError("not_found", "User not found.");
             }
             userService.updateUser(user, roleIdList);
-            userService.recordAuditLog(actorName, "USER_UPDATE", user.getUsername(), "Updated user status: " + user.getStatus(), remoteAddr);
+            userService.recordAuditLog(actorName, "USER_UPDATE", user.getUsername(),
+                    "Updated user status: " + user.getStatus(), remoteAddr);
             return new SuccessResponse("Updated").ok();
         } else {
             // Insert
@@ -209,7 +210,8 @@ public class UserManagementActivity {
 
         UserInfo actor = translet.getSessionAdapter().getAttribute(UserInfo.USERINFO_KEY);
         String actorName = (actor != null ? actor.getUsername() : "system");
-        userService.recordAuditLog(actorName, "USER_DELETE", targetName, "Deleted user ID: " + userId, WebUtils.getRemoteAddr(translet));
+        userService.recordAuditLog(actorName, "USER_DELETE", targetName,
+                "Deleted user ID: " + userId, WebUtils.getRemoteAddr(translet));
 
         return new SuccessResponse("Deleted").ok();
     }
@@ -224,7 +226,8 @@ public class UserManagementActivity {
 
         UserInfo actor = translet.getSessionAdapter().getAttribute(UserInfo.USERINFO_KEY);
         String actorName = (actor != null ? actor.getUsername() : "system");
-        userService.recordAuditLog(actorName, "ROLE_PERM_UPDATE", "RoleID:" + roleId, "Updated permissions for role ID: " + roleId, WebUtils.getRemoteAddr(translet));
+        userService.recordAuditLog(actorName, "ROLE_PERM_UPDATE", "RoleID:" + roleId,
+                "Updated permissions for role ID: " + roleId, WebUtils.getRemoteAddr(translet));
 
         return new SuccessResponse("Role permissions updated").ok();
     }

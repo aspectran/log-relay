@@ -61,7 +61,8 @@ public interface BuildHistoryMapper {
      * @param targetNodeId the target node ID
      * @return the build history entity, or null if not found
      */
-    BuildHistory getBuildHistoryByExecutionIdAndNodeId(@Param("executionId") String executionId, @Param("targetNodeId") String targetNodeId);
+    BuildHistory getBuildHistoryByExecutionIdAndNodeId(
+            @Param("executionId") String executionId, @Param("targetNodeId") String targetNodeId);
 
     /**
      * Retrieves all build history master records by execution ID.

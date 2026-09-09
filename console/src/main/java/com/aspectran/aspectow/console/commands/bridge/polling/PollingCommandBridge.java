@@ -167,11 +167,13 @@ public class PollingCommandBridge extends AbstractComponent implements CommandBr
             String transletName = commandParameters.getString("translet");
 
             if (!"sysinfo".equals(commandName) && !"translet".equals(commandName)) {
-                return new FailureResponse().setError("forbidden", "Only 'sysinfo' and 'translet' commands are allowed in the demo environment.");
+                return new FailureResponse().setError("forbidden",
+                        "Only 'sysinfo' and 'translet' commands are allowed in the demo environment.");
             }
 
             if ("translet".equals(commandName) && !"demo/commands/hello".equals(transletName)) {
-                return new FailureResponse().setError("forbidden", "Only 'demo/commands/hello' translet can be executed in the demo environment.");
+                return new FailureResponse().setError("forbidden",
+                        "Only 'demo/commands/hello' translet can be executed in the demo environment.");
             }
         }
 

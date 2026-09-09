@@ -67,7 +67,7 @@ public abstract class ConsoleWebUtils {
         String name = parts[0];
         String domain = parts[1];
         if (name.length() <= 2) {
-            return name.substring(0, 1) + "*@" + domain;
+            return name.charAt(0) + "*@" + domain;
         }
         return name.charAt(0) + "***" + name.charAt(name.length() - 1) + "@" + domain;
     }

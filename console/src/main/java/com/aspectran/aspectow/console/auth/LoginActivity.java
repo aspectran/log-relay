@@ -86,10 +86,12 @@ public class LoginActivity {
                 userService.recordLogin(username, remoteAddr, userAgent, false);
                 userService.recordAuditLog(username, "LOGIN_FAILED_UNALLOWED_IP", "User: " + username,
                         "Login attempt from unallowed IP address: " + remoteAddr, remoteAddr);
-                return new FailureResponse().setError("ip_denied", "Access denied. Your IP address (" + remoteAddr + ") is not allowed for this account.");
+                return new FailureResponse().setError("ip_denied", "Access denied. Your IP address (" +
+                        remoteAddr + ") is not allowed for this account.");
             }
             if (userService.isPasswordChangeRequired(user, password)) {
-                return new FailureResponse().setError("setup_required", "Administrator password setup is required.");
+                return new FailureResponse().setError("setup_required",
+                        "Administrator password setup is required.");
             }
             if (!"NORMAL".equals(user.getStatus())) {
                 userService.recordLogin(username, remoteAddr, userAgent, false);
@@ -105,7 +107,8 @@ public class LoginActivity {
             if (user != null) {
                 User updatedUser = userService.getUserByUsername(username);
                 if (updatedUser != null && "LOCKED".equals(updatedUser.getStatus())) {
-                    return new FailureResponse().setError("locked", "Account has been LOCKED due to 5 consecutive failed login attempts.");
+                    return new FailureResponse().setError("locked",
+                            "Account has been LOCKED due to 5 consecutive failed login attempts.");
                 }
             }
             return new FailureResponse().setError("invalid", "Invalid username or password.");
@@ -138,7 +141,6 @@ public class LoginActivity {
         userInfo.setPermissions(permissions);
 
         sessionAdapter.setAttribute(UserInfo.USERINFO_KEY, userInfo);
-        sessionAdapter.setMaxInactiveInterval(1800); // 30 min.
     }
 
     @RequestToPost("/setup-password")

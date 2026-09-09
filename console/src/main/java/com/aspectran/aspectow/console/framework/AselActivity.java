@@ -70,7 +70,8 @@ public class AselActivity extends InstantActivitySupport {
 
         // Strict sandbox security check
         if (isUnsafe(expression)) {
-            return new FailureResponse().setError("security", "Access to restricted system resources or properties is denied for security reasons.");
+            return new FailureResponse().setError("security",
+                    "Access to restricted system resources or properties is denied for security reasons.");
         }
 
         try {

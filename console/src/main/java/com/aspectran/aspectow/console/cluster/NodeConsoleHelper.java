@@ -89,7 +89,9 @@ public class NodeConsoleHelper {
         Map<String, String> pulses = nodeRegistry.getAllPulses();
         List<Map<String, Object>> result = new ArrayList<>(allNodes.size());
         long now = System.currentTimeMillis();
-        long pulseInterval = (nodeManager.getClusterConfig() != null ? nodeManager.getClusterConfig().getPulseInterval(10000L) : 10000L);
+        long pulseInterval = (nodeManager.getClusterConfig() != null
+                ? nodeManager.getClusterConfig().getPulseInterval(10000L)
+                : 10000L);
         long timeout = Math.max(pulseInterval * 3, 30000L); // at least 30 seconds
 
         for (NodeInfo info : allNodes) {

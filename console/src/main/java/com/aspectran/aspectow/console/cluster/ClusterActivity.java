@@ -198,7 +198,8 @@ public class ClusterActivity {
                 remoteCommandManager.process(commandRequest);
                 return new SuccessResponse("Service restart command dispatched to " + nodeId).ok();
             } catch (Exception e) {
-                return new FailureResponse().setError("error", "Failed to dispatch service restart command: " + e.getMessage());
+                return new FailureResponse().setError("error",
+                        "Failed to dispatch service restart command: " + e.getMessage());
             }
         } else {
             return new FailureResponse().setError("error", "Missing nodeId parameter");
@@ -223,7 +224,8 @@ public class ClusterActivity {
                 remoteBuildDeployManager.dispatch(info);
                 return new SuccessResponse("Server restart command dispatched to " + nodeId).ok();
             } catch (Exception e) {
-                return new FailureResponse().setError("error", "Failed to dispatch server restart command: " + e.getMessage());
+                return new FailureResponse().setError("error",
+                        "Failed to dispatch server restart command: " + e.getMessage());
             }
         } else {
             return new FailureResponse().setError("error", "Missing nodeId parameter");
@@ -251,7 +253,8 @@ public class ClusterActivity {
                 remoteCommandManager.process(commandRequest);
                 return new SuccessResponse("Pause command dispatched to " + nodeId).ok();
             } catch (Exception e) {
-                return new FailureResponse().setError("error", "Failed to dispatch pause command: " + e.getMessage());
+                return new FailureResponse().setError("error",
+                        "Failed to dispatch pause command: " + e.getMessage());
             }
         } else {
             return new FailureResponse().setError("error", "Missing nodeId parameter");
@@ -279,7 +282,8 @@ public class ClusterActivity {
                 remoteCommandManager.process(commandRequest);
                 return new SuccessResponse("Resume command dispatched to " + nodeId).ok();
             } catch (Exception e) {
-                return new FailureResponse().setError("error", "Failed to dispatch resume command: " + e.getMessage());
+                return new FailureResponse().setError("error",
+                        "Failed to dispatch resume command: " + e.getMessage());
             }
         } else {
             return new FailureResponse().setError("error", "Missing nodeId parameter");

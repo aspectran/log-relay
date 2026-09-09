@@ -322,7 +322,9 @@ public class BuildDeployActivity {
             if (nodeId.equals(nodeManager.getNodeId())) {
                 live = true;
             } else if (nodeManager.getNodeRegistry() != null) {
-                long pulseInterval = (nodeManager.getClusterConfig() != null ? nodeManager.getClusterConfig().getPulseInterval(10000L) : 10000L);
+                long pulseInterval = (nodeManager.getClusterConfig() != null
+                        ? nodeManager.getClusterConfig().getPulseInterval(10000L)
+                        : 10000L);
                 long timeout = Math.max(pulseInterval * 3, 30000L);
                 live = nodeManager.getNodeRegistry().isLive(nodeId, timeout);
             }

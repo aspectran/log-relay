@@ -101,7 +101,8 @@ public class RemoteCommandsActivity {
     private Map<String, Object> createCommandsModel(String layout, String nodeId) {
         String clusterMode = nodeManager.getClusterConfig().getMode();
         List<Map<String, Object>> nodes = nodeConsoleHelper.getNodes(true);
-        String targetNodeId = (nodeId != null ? (nodes.stream().anyMatch(n -> nodeId.equals(n.get("id"))) ? nodeId : null) : null);
+        String targetNodeId = (nodeId != null ? (nodes.stream().anyMatch(n
+                -> nodeId.equals(n.get("id"))) ? nodeId : null) : null);
         if (nodeId != null && targetNodeId == null) {
             throw new IllegalArgumentException("No node found with ID: " + nodeId);
         }

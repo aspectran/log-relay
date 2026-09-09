@@ -552,7 +552,8 @@ public class LocalScriptRunner implements ActivityContextAware {
                     }
                     if (!line.isEmpty() && line.trim().isEmpty() && !logBuffer.isEmpty()) {
                         String last = logBuffer.getLast();
-                        if (last != null && (last.startsWith("Progress (") || last.startsWith("Downloading") || last.startsWith("Downloaded"))) {
+                        if (last != null && (last.startsWith("Progress (") ||
+                                last.startsWith("Downloading") || last.startsWith("Downloaded"))) {
                             continue;
                         }
                     }

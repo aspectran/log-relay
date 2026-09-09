@@ -115,8 +115,7 @@ public class DetachedRestartRunner {
             command.add("nohup");
             command.add("sh");
             command.add("-c");
-            command.add(String.format("sleep 1 && exec \"%s\" %s",
-                    scriptFile.getAbsolutePath(), action));
+            command.add(String.format("sleep 1 && exec \"%s\" %s", scriptFile.getAbsolutePath(), action));
         }
         return command;
     }

@@ -70,7 +70,8 @@ public final class ConsoleTokenIssuer {
     }
 
     /**
-     * Issues a time-limited token with a specified expiration time using the user information extracted from the given Translet.
+     * Issues a time-limited token with a specified expiration time using the user information
+     * extracted from the given Translet.
      * @param maxAgeInSeconds the maximum age of the token in seconds
      * @param translet the current translet
      * @return the generated token
