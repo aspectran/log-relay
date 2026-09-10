@@ -174,7 +174,7 @@
     padding: 0 12px;
     min-width: 4.3rem;
     height: 100%;
-    border-left: 1px solid #353b3e;
+    border-left: 1px solid #ccc;
     font-size: .9em;
     font-weight: bold;
     color: #677278;
@@ -859,7 +859,7 @@
         box-shadow: none;
     }
     .node.metrics-bar .node-badge {
-        color: #677278;
+        border-left: 1px solid #353b3e;
     }
     .node.metrics-bar .node-metrics {
         border-left: 1px solid #3b3f42;
